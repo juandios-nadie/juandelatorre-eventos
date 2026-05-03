@@ -1,6 +1,6 @@
 // ─── Site-wide constants ──────────────────────────────────────────────────────
 
-export const BASE_URL = "https://juandelatorreventos.com";
+export const BASE_URL = "https://juandelatorreeventos.com";
 
 // ─── Contact defaults (used when Sanity CMS has no data) ─────────────────────
 
