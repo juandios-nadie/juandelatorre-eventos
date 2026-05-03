@@ -1,8 +1,9 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useSearchParams } from "next/navigation";
 import type { Category, RentalItem } from "@/lib/sanity";
+import { STATIC_ITEMS, STATIC_CATEGORIES, type StaticItem } from "@/lib/staticData";
 import ProductCard from "./ProductCard";
 
 interface CatalogGridProps {
@@ -12,23 +13,36 @@ interface CatalogGridProps {
 
 export default function CatalogGrid({ categories, items }: CatalogGridProps) {
   const searchParams = useSearchParams();
-  const [activeSlug, setActiveSlug] = useState<string>("todos");
+  const [activeSlug, setActiveSlug] = useState<string>(
+    () => searchParams.get("categoria") ?? "todos"
+  );
 
-  // Sync with URL param on mount (e.g. from ServicesSection link)
-  useEffect(() => {
-    const param = searchParams.get("categoria");
-    if (param) setActiveSlug(param);
-  }, [searchParams]);
+  const usingSanity = items.length > 0;
+  const displayItems: StaticItem[] = usingSanity
+    ? items.map((i) => ({ ...i, localImage: "" }))
+    : STATIC_ITEMS;
+  const displayCategories = categories.length > 0 ? categories : STATIC_CATEGORIES;
 
-  const filtered =
-    activeSlug === "todos"
-      ? items
-      : items.filter((item) => item.category?.slug === activeSlug);
+  const showingAll = activeSlug === "todos";
+
+  const filteredItems = showingAll
+    ? displayItems
+    : displayItems.filter((item) => item.category?.slug === activeSlug);
+
+  // For "Todos" view, group by category preserving canonical order
+  const groupedSections = showingAll
+    ? displayCategories
+        .map((cat) => ({
+          category: cat,
+          items: displayItems.filter((i) => i.category?.slug === cat.slug),
+        }))
+        .filter((g) => g.items.length > 0)
+    : null;
 
   return (
     <div className="max-w-6xl mx-auto px-4 sm:px-6 py-16">
       {/* Page title */}
-      <div className="mb-12 text-center">
+      <div className="mb-10 text-center">
         <p className="text-brand-gold text-xs tracking-[0.4em] uppercase mb-3 font-light">
           Lo que rentamos
         </p>
@@ -38,15 +52,15 @@ export default function CatalogGrid({ categories, items }: CatalogGridProps) {
         <div className="h-px bg-brand-gold/40 max-w-[60px] mx-auto mt-5" />
       </div>
 
-      {/* Category filter pills */}
-      {categories.length > 0 && (
-        <div className="flex flex-wrap gap-2 justify-center mb-10">
+      {/* Category filter — horizontally scrollable on mobile */}
+      <div className="sticky top-0 z-20 bg-brand-warm-white/95 backdrop-blur-sm py-3 mb-8 -mx-4 px-4 sm:mx-0 sm:px-0 border-b border-brand-champagne/60">
+        <div className="flex gap-2 overflow-x-auto pb-1 sm:flex-wrap sm:justify-center sm:overflow-x-visible [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
           <FilterPill
             label="Todos"
-            active={activeSlug === "todos"}
+            active={showingAll}
             onClick={() => setActiveSlug("todos")}
           />
-          {categories.map((cat) => (
+          {displayCategories.map((cat) => (
             <FilterPill
               key={cat._id}
               label={cat.name}
@@ -55,10 +69,41 @@ export default function CatalogGrid({ categories, items }: CatalogGridProps) {
             />
           ))}
         </div>
-      )}
+      </div>
 
-      {/* Grid */}
-      {filtered.length === 0 ? (
+      {/* Content */}
+      {showingAll && groupedSections ? (
+        // ── Grouped by category ──────────────────────────────────────────────
+        <div className="space-y-14">
+          {groupedSections.map(({ category, items: catItems }) => (
+            <section key={category._id}>
+              <div className="flex items-center gap-4 mb-6">
+                <h2 className="font-playfair text-brand-charcoal text-xl font-bold shrink-0">
+                  {category.name}
+                </h2>
+                <div className="h-px flex-1 bg-brand-champagne" />
+                <button
+                  onClick={() => setActiveSlug(category.slug)}
+                  className="text-xs text-brand-gold hover:text-brand-ruby transition-colors shrink-0 font-medium"
+                >
+                  Ver todos →
+                </button>
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+                {catItems.map((item) => (
+                  <ProductCard
+                    key={item._id}
+                    item={item}
+                    localImageSrc={!usingSanity && item.localImage ? item.localImage : undefined}
+                    localImageSrcs={!usingSanity && item.localImages?.length ? item.localImages : undefined}
+                  />
+                ))}
+              </div>
+            </section>
+          ))}
+        </div>
+      ) : filteredItems.length === 0 ? (
+        // ── Empty state ──────────────────────────────────────────────────────
         <div className="text-center py-20 text-brand-charcoal/50">
           <p className="text-lg font-light">
             No hay artículos en esta categoría todavía.
@@ -71,20 +116,16 @@ export default function CatalogGrid({ categories, items }: CatalogGridProps) {
           </button>
         </div>
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
-          {filtered.map((item) => (
-            <ProductCard key={item._id} item={item} />
+        // ── Filtered single category ─────────────────────────────────────────
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+          {filteredItems.map((item) => (
+            <ProductCard
+              key={item._id}
+              item={item}
+              localImageSrc={!usingSanity && item.localImage ? item.localImage : undefined}
+              localImageSrcs={!usingSanity && item.localImages?.length ? item.localImages : undefined}
+            />
           ))}
-        </div>
-      )}
-
-      {/* Empty state when no items at all */}
-      {items.length === 0 && (
-        <div className="text-center py-24 text-brand-charcoal/40">
-          <p className="text-xl font-light mb-2">Catálogo en preparación</p>
-          <p className="text-sm">
-            Pronto agregaremos nuestros artículos disponibles.
-          </p>
         </div>
       )}
     </div>
@@ -103,7 +144,7 @@ function FilterPill({
   return (
     <button
       onClick={onClick}
-      className={`px-5 py-2 rounded-full text-sm font-medium transition-all ${
+      className={`shrink-0 px-4 py-1.5 rounded-full text-sm font-medium transition-all whitespace-nowrap ${
         active
           ? "bg-brand-ruby text-white shadow-sm"
           : "bg-white border border-brand-champagne text-brand-charcoal/70 hover:border-brand-gold hover:text-brand-gold"
