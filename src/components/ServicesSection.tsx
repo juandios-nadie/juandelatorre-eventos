@@ -1,54 +1,14 @@
+import Image from "next/image";
 import Link from "next/link";
 import type { Category } from "@/lib/sanity";
+import { STATIC_CATEGORIES, getCategoryImage } from "@/lib/staticData";
 
 interface ServicesSectionProps {
   categories: Category[];
 }
 
-const FALLBACK_CATEGORIES: Category[] = [
-  { _id: "1", name: "Mobiliario", slug: "mobiliario" },
-  { _id: "2", name: "Escenarios", slug: "escenarios" },
-  { _id: "3", name: "Sillas", slug: "sillas" },
-  { _id: "4", name: "Mesas", slug: "mesas" },
-];
-
-const CATEGORY_ICONS: Record<string, React.ReactNode> = {
-  default: (
-    <svg viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-      <rect x="2" y="7" width="20" height="14" rx="2" />
-      <path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2" />
-    </svg>
-  ),
-  mobiliario: (
-    <svg viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M2 4h20M4 4v16M20 4v16M4 12h16" />
-    </svg>
-  ),
-  escenarios: (
-    <svg viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-      <rect x="2" y="8" width="20" height="12" rx="1" />
-      <path d="M6 8V5M12 8V4M18 8V5" />
-    </svg>
-  ),
-  sillas: (
-    <svg viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M5 10V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v5M5 10h14M5 10v9M19 10v9M8 19h8" />
-    </svg>
-  ),
-  mesas: (
-    <svg viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-      <rect x="2" y="8" width="20" height="3" rx="1" />
-      <path d="M6 11v8M18 11v8" />
-    </svg>
-  ),
-};
-
-function getIcon(slug: string) {
-  return CATEGORY_ICONS[slug.toLowerCase()] ?? CATEGORY_ICONS.default;
-}
-
 export default function ServicesSection({ categories }: ServicesSectionProps) {
-  const items = categories.length > 0 ? categories : FALLBACK_CATEGORIES;
+  const items = categories.length > 0 ? categories : STATIC_CATEGORIES;
 
   return (
     <section className="py-20 px-4 bg-brand-warm-white">
@@ -70,12 +30,16 @@ export default function ServicesSection({ categories }: ServicesSectionProps) {
             <Link
               key={cat._id}
               href={`/catalogo?categoria=${cat.slug}`}
-              className="group flex flex-col items-center text-center p-6 bg-white rounded-2xl shadow-sm hover:shadow-md border border-transparent hover:border-brand-gold/30 transition-all duration-200"
+              className="group relative overflow-hidden rounded-2xl shadow-sm hover:shadow-lg transition-all duration-300 aspect-[4/3]"
             >
-              <div className="text-brand-ruby/70 group-hover:text-brand-gold mb-4 transition-colors">
-                {getIcon(cat.slug)}
-              </div>
-              <span className="font-playfair text-brand-charcoal text-base font-bold group-hover:text-brand-ruby transition-colors">
+              <Image
+                src={getCategoryImage(cat.slug)}
+                alt={cat.name}
+                fill
+                className="object-cover group-hover:scale-105 transition-transform duration-500"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
+              <span className="absolute bottom-3 left-0 right-0 text-center font-playfair text-white text-sm sm:text-base font-bold drop-shadow-md px-2">
                 {cat.name}
               </span>
             </Link>
