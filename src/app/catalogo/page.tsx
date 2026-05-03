@@ -7,9 +7,15 @@ import { getCategories, getAllItems } from "@/lib/sanity";
 export const revalidate = 3600;
 
 export const metadata: Metadata = {
-  title: "Catálogo | Juan de la Torre Eventos",
+  title: "Catálogo de Artículos",
   description:
-    "Explora nuestro catálogo de artículos para renta: mobiliario, escenarios, sillas, mesas y más. Contáctanos para cotizar.",
+    "Explora nuestro catálogo de artículos para renta: sillas Versalles, Tiffany, Crossback, mesas de madera, periqueras y más. Contáctanos para cotizar.",
+  openGraph: {
+    title: "Catálogo | Juan de la Torre Eventos",
+    description:
+      "Sillas, mesas, periqueras y montajes para tu evento en Guadalajara. Cotiza por WhatsApp.",
+    images: [{ url: "/images/sillas-crossback.jpeg" }],
+  },
 };
 
 export default async function CatalogPage() {
