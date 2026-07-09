@@ -9,7 +9,7 @@ export const BASE_URL = "https://juandelatorreeventos.com";
 export const WHATSAPP_NUMBER = "523334469044";
 export const DEFAULT_PHONE = "333-446-90-44";
 export const FACEBOOK_URL =
-  "https://www.facebook.com/people/Juan-de-la-Torre-Eventos/100057200871376/";
+  "https://www.facebook.com/p/Juan-de-la-Torre-Eventos-100057200871376/";
 
 // ─── WhatsApp URL helpers ─────────────────────────────────────────────────────
 

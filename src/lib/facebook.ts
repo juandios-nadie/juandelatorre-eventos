@@ -10,6 +10,21 @@ const FACEBOOK_HOSTNAMES = new Set([
   "web.facebook.com",
 ]);
 
+function canonicalizeFacebookPath(pathname: string): string {
+  const segments = pathname.split("/").filter(Boolean);
+
+  if (
+    segments.length === 3 &&
+    segments[0] === "people" &&
+    segments[1] &&
+    /^\d+$/.test(segments[2])
+  ) {
+    return `/p/${segments[1]}-${segments[2]}/`;
+  }
+
+  return pathname;
+}
+
 export function normalizeFacebookPageUrl(
   value: string | null | undefined
 ): string | null {
@@ -31,6 +46,7 @@ export function normalizeFacebookPageUrl(
     }
 
     parsed.protocol = "https:";
+    parsed.pathname = canonicalizeFacebookPath(parsed.pathname);
     parsed.search = "";
     parsed.hash = "";
 

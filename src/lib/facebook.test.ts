@@ -12,7 +12,7 @@ test("normalizeFacebookPageUrl accepts Facebook page URLs and removes tracking d
     normalizeFacebookPageUrl(
       " http://www.facebook.com/people/Juan-de-la-Torre-Eventos/100057200871376/?fbclid=abc#posts "
     ),
-    "https://www.facebook.com/people/Juan-de-la-Torre-Eventos/100057200871376/"
+    "https://www.facebook.com/p/Juan-de-la-Torre-Eventos-100057200871376/"
   );
 });
 

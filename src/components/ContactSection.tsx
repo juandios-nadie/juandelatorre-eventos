@@ -1,5 +1,6 @@
 import type { SiteSettings } from "@/lib/sanity";
 import { DEFAULT_PHONE, FACEBOOK_URL } from "@/lib/constants";
+import { getFacebookPageUrl } from "@/lib/facebook";
 import Link from "next/link";
 import WhatsAppIcon from "./WhatsAppIcon";
 
@@ -9,7 +10,7 @@ interface ContactSectionProps {
 
 export default function ContactSection({ settings }: ContactSectionProps) {
   const phone = settings?.phone ?? DEFAULT_PHONE;
-  const facebookUrl = settings?.facebookUrl ?? FACEBOOK_URL;
+  const facebookUrl = getFacebookPageUrl(settings?.facebookUrl ?? FACEBOOK_URL);
 
   return (
     <section
