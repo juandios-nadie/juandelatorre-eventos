@@ -8,7 +8,12 @@ import {
   STATIC_CATEGORIES,
   type StaticItem,
 } from "@/lib/staticData";
-import { WHATSAPP_NUMBER } from "@/lib/constants";
+import {
+  buildCatalogSections,
+  getCatalogStats,
+  type CatalogSection,
+} from "@/lib/catalog";
+import { WHATSAPP_NUMBER, WHATSAPP_URL } from "@/lib/constants";
 import { buildQuoteUrl } from "@/lib/quote";
 import ProductCard from "./ProductCard";
 import WhatsAppIcon from "./WhatsAppIcon";
@@ -19,10 +24,21 @@ interface CatalogGridProps {
 }
 
 interface QuoteDetails {
+  eventDate: string;
   eventType: string;
   guestCount: string;
   location: string;
 }
+
+const CATEGORY_SUMMARIES: Record<string, string> = {
+  sillas: "Modelos para ceremonia, banquete, jardín y zona infantil.",
+  mesas: "Redondas, cuadradas, rectangulares y madera nogal.",
+  cristaleria: "Lo necesario para vestir la mesa con una línea completa.",
+  periqueras: "Puntos altos para coctel, terrazas y recepciones.",
+  toldos: "Cobertura para exterior con cielo, luz y cortinas opcionales.",
+  escenarios: "Tarimas, pódium, soportes y apoyo para montajes formales.",
+  kits: "Combinaciones listas para mesa principal y montajes completos.",
+};
 
 export default function CatalogGrid({ categories, items }: CatalogGridProps) {
   const searchParams = useSearchParams();
@@ -31,6 +47,7 @@ export default function CatalogGrid({ categories, items }: CatalogGridProps) {
   );
   const [selectedNames, setSelectedNames] = useState<string[]>([]);
   const [quoteDetails, setQuoteDetails] = useState<QuoteDetails>({
+    eventDate: "",
     eventType: "",
     guestCount: "",
     location: "",
@@ -43,26 +60,27 @@ export default function CatalogGrid({ categories, items }: CatalogGridProps) {
   const displayCategories =
     categories.length > 0 ? categories : STATIC_CATEGORIES;
 
-  const showingAll = activeSlug === "todos";
-
-  const filteredItems = showingAll
-    ? displayItems
-    : displayItems.filter((item) => item.category?.slug === activeSlug);
-
+  const sections = useMemo(
+    () => buildCatalogSections(displayCategories, displayItems),
+    [displayCategories, displayItems]
+  );
+  const stats = useMemo(() => getCatalogStats(sections), [sections]);
   const selectedSet = useMemo(() => new Set(selectedNames), [selectedNames]);
 
-  const groupedSections = showingAll
-    ? displayCategories
-        .map((cat) => ({
-          category: cat,
-          items: displayItems.filter((i) => i.category?.slug === cat.slug),
-        }))
-        .filter((g) => g.items.length > 0)
-    : null;
+  const showingAll = activeSlug === "todos";
+  const activeSection = sections.find(
+    (section) => section.category.slug === activeSlug
+  );
+  const visibleSections = showingAll
+    ? sections
+    : activeSection
+    ? [activeSection]
+    : [];
 
   const quoteUrl = buildQuoteUrl({
     number: WHATSAPP_NUMBER,
     items: selectedNames,
+    eventDate: quoteDetails.eventDate,
     eventType: quoteDetails.eventType,
     guestCount: quoteDetails.guestCount,
     location: quoteDetails.location,
@@ -80,132 +98,310 @@ export default function CatalogGrid({ categories, items }: CatalogGridProps) {
     setQuoteDetails((current) => ({ ...current, [field]: value }));
   }
 
-  return (
-    <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8 lg:py-16">
-      {/* Page title */}
-      <div className="grid gap-6 pb-10 lg:grid-cols-[0.85fr_1fr] lg:items-end">
-        <div>
-          <p className="text-sm font-bold text-brand-ruby">Lo que rentamos</p>
-          <h1 className="mt-3 font-playfair text-4xl font-bold leading-tight text-brand-charcoal sm:text-5xl">
-            Catálogo para armar tu cotización.
-          </h1>
-        </div>
-        <p className="max-w-2xl text-base leading-8 text-brand-charcoal/68 lg:justify-self-end">
-          Agrega artículos, completa los datos básicos del evento y manda un
-          solo WhatsApp. También puedes cotizar una pieza directamente desde su
-          tarjeta.
-        </p>
-      </div>
+  function renderProductCard(
+    item: StaticItem,
+    index: number,
+    categorySlug?: string
+  ) {
+    return (
+      <ProductCard
+        key={item._id}
+        item={item}
+        localImageSrc={
+          !usingSanity && item.localImage ? item.localImage : undefined
+        }
+        localImageSrcs={
+          !usingSanity && item.localImages?.length
+            ? item.localImages
+            : undefined
+        }
+        selected={selectedSet.has(item.name)}
+        onToggle={() => toggleItem(item.name)}
+        priority={index < 3 && (showingAll ? categorySlug === "sillas" : true)}
+        quoteTrayHref="#quote-tray"
+      />
+    );
+  }
 
-      {/* Category filter */}
-      <div className="sticky top-16 z-20 -mx-4 border-y border-brand-champagne/70 bg-brand-warm-white/95 px-4 py-3 backdrop-blur-sm sm:mx-0 sm:px-0">
-        <div className="flex gap-2 overflow-x-auto pb-1 sm:flex-wrap sm:justify-center sm:overflow-x-visible [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
-          <FilterPill
-            label="Todos"
-            active={showingAll}
-            onClick={() => setActiveSlug("todos")}
-          />
-          {displayCategories.map((cat) => (
-            <FilterPill
-              key={cat._id}
-              label={cat.name}
-              active={activeSlug === cat.slug}
-              onClick={() => setActiveSlug(cat.slug)}
-            />
-          ))}
+  return (
+    <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8 lg:py-14">
+      <CatalogHero stats={stats} />
+
+      <CategoryRail
+        sections={sections}
+        stats={stats}
+        activeSlug={activeSlug}
+        onSelect={setActiveSlug}
+      />
+      <CatalogStatus
+        showingAll={showingAll}
+        activeSection={activeSection}
+        itemCount={stats.itemCount}
+      />
+      <p className="sr-only" aria-live="polite">
+        {selectedNames.length} artículo
+        {selectedNames.length === 1 ? "" : "s"} seleccionado
+        {selectedNames.length === 1 ? "" : "s"} para cotizar.
+      </p>
+
+      <div
+        id="catalog-items"
+        className={`mt-8 grid gap-8 ${
+          selectedNames.length > 0
+            ? "pb-28 lg:grid-cols-[minmax(0,1fr)_390px] lg:pb-0"
+            : ""
+        }`}
+      >
+        <div className="order-2 lg:order-1">
+          {visibleSections.length > 0 ? (
+            <div className="space-y-16">
+              {visibleSections.map((section) => (
+                <ShowroomSection
+                  key={section.category._id}
+                  section={section}
+                  showingAll={showingAll}
+                  onViewCategory={() => setActiveSlug(section.category.slug)}
+                >
+                  {section.items.map((item, index) =>
+                    renderProductCard(item, index, section.category.slug)
+                  )}
+                </ShowroomSection>
+              ))}
+            </div>
+          ) : (
+            <EmptyCatalogState onReset={() => setActiveSlug("todos")} />
+          )}
         </div>
+
+        {selectedNames.length > 0 && (
+          <QuoteTray
+            selectedNames={selectedNames}
+            quoteDetails={quoteDetails}
+            quoteUrl={quoteUrl}
+            onChange={updateQuoteDetails}
+            onRemove={toggleItem}
+            onClear={() => setSelectedNames([])}
+          />
+        )}
       </div>
 
       {selectedNames.length > 0 && (
-        <QuoteSummary
-          selectedNames={selectedNames}
-          quoteDetails={quoteDetails}
-          quoteUrl={quoteUrl}
-          onChange={updateQuoteDetails}
-          onRemove={toggleItem}
-          onClear={() => setSelectedNames([])}
-        />
-      )}
-
-      {/* Content */}
-      {showingAll && groupedSections ? (
-        <div className="mt-12 space-y-16">
-          {groupedSections.map(({ category, items: catItems }) => (
-            <section key={category._id}>
-              <div className="mb-6 flex items-center gap-4">
-                <h2 className="shrink-0 font-playfair text-2xl font-bold text-brand-charcoal">
-                  {category.name}
-                </h2>
-                <div className="h-px flex-1 bg-brand-champagne" />
-                <button
-                  type="button"
-                  onClick={() => setActiveSlug(category.slug)}
-                  className="shrink-0 text-sm font-bold text-brand-gold transition-colors hover:text-brand-ruby"
-                >
-                  Ver categoría
-                </button>
-              </div>
-              <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-                {catItems.map((item, index) => (
-                  <ProductCard
-                    key={item._id}
-                    item={item}
-                    localImageSrc={
-                      !usingSanity && item.localImage ? item.localImage : undefined
-                    }
-                    localImageSrcs={
-                      !usingSanity && item.localImages?.length
-                        ? item.localImages
-                        : undefined
-                    }
-                    selected={selectedSet.has(item.name)}
-                    onToggle={() => toggleItem(item.name)}
-                    priority={index < 3 && category.slug === "sillas"}
-                  />
-                ))}
-              </div>
-            </section>
-          ))}
-        </div>
-      ) : filteredItems.length === 0 ? (
-        <div className="py-20 text-center text-brand-charcoal/58">
-          <p className="text-lg font-medium">
-            No hay artículos en esta categoría todavía.
-          </p>
-          <button
-            type="button"
-            onClick={() => setActiveSlug("todos")}
-            className="mt-4 text-sm font-bold text-brand-gold hover:text-brand-ruby"
-          >
-            Ver todos
-          </button>
-        </div>
-      ) : (
-        <div className="mt-12 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {filteredItems.map((item, index) => (
-            <ProductCard
-              key={item._id}
-              item={item}
-              localImageSrc={
-                !usingSanity && item.localImage ? item.localImage : undefined
-              }
-              localImageSrcs={
-                !usingSanity && item.localImages?.length
-                  ? item.localImages
-                  : undefined
-              }
-              selected={selectedSet.has(item.name)}
-              onToggle={() => toggleItem(item.name)}
-              priority={index < 3}
-            />
-          ))}
-        </div>
+        <MobileQuoteBar selectedCount={selectedNames.length} quoteUrl={quoteUrl} />
       )}
     </div>
   );
 }
 
-function QuoteSummary({
+function CatalogHero({
+  stats,
+}: {
+  stats: { itemCount: number; categoryCount: number };
+}) {
+  return (
+    <section className="overflow-hidden rounded-[2rem] border border-brand-champagne bg-brand-charcoal text-white shadow-[0_24px_80px_rgba(24,22,21,0.16)]">
+      <div className="grid gap-6 p-5 sm:gap-8 sm:p-8 lg:grid-cols-[1fr_0.72fr] lg:p-10">
+        <div className="max-w-3xl">
+          <p className="text-sm font-bold text-brand-gold">Showroom de renta</p>
+          <h1 className="mt-3 font-playfair text-[2.35rem] font-bold leading-[0.95] sm:text-6xl">
+            Elige piezas, arma tu lista y manda una cotización clara.
+          </h1>
+          <p className="mt-4 max-w-2xl text-sm leading-7 text-white/76 sm:mt-5 sm:text-base sm:leading-8">
+            Este catálogo está pensado para decidir rápido: revisa por familia,
+            agrega lo que te interesa y llega a WhatsApp con la información
+            ordenada.
+          </p>
+          <div className="mt-6 flex flex-col gap-3 sm:mt-7 sm:flex-row">
+            <a
+              href="#catalog-items"
+              className="inline-flex items-center justify-center rounded-full bg-brand-gold px-6 py-3.5 text-sm font-bold text-brand-charcoal transition hover:bg-brand-champagne focus:outline-none focus:ring-2 focus:ring-brand-gold focus:ring-offset-2 focus:ring-offset-brand-charcoal active:translate-y-px"
+            >
+              Explorar catálogo
+            </a>
+            <a
+              href={WHATSAPP_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hidden items-center justify-center rounded-full border border-white/16 bg-white/10 px-6 py-3.5 text-sm font-bold text-white transition hover:bg-white/16 focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-brand-charcoal active:translate-y-px sm:inline-flex"
+            >
+              WhatsApp directo
+            </a>
+          </div>
+        </div>
+
+        <div className="hidden content-end gap-3 sm:grid sm:grid-cols-3 lg:grid-cols-1">
+          <HeroStat value={`${stats.itemCount}`} label="artículos visibles" />
+          <HeroStat value={`${stats.categoryCount}`} label="familias de renta" />
+          <HeroStat value="1" label="mensaje para cotizar" />
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function HeroStat({ value, label }: { value: string; label: string }) {
+  return (
+    <div className="rounded-2xl border border-white/10 bg-white/[0.06] px-5 py-4">
+      <p className="font-playfair text-3xl font-bold text-brand-gold">
+        {value}
+      </p>
+      <p className="mt-1 text-sm font-semibold text-white/78">{label}</p>
+    </div>
+  );
+}
+
+function CategoryRail({
+  sections,
+  stats,
+  activeSlug,
+  onSelect,
+}: {
+  sections: CatalogSection[];
+  stats: { itemCount: number };
+  activeSlug: string;
+  onSelect: (slug: string) => void;
+}) {
+  return (
+    <section
+      className="sticky top-16 z-20 -mx-4 border-b border-brand-champagne/70 bg-brand-warm-white/95 px-4 py-3 backdrop-blur-sm sm:mx-0 sm:px-0"
+      aria-label="Categorías del catálogo"
+    >
+      <div className="mb-2 flex items-center justify-between text-xs font-bold text-brand-charcoal/58 lg:hidden">
+        <span>Categorías</span>
+        <span>Desliza</span>
+      </div>
+      <div
+        className="flex snap-x gap-3 overflow-x-auto pb-1 lg:grid lg:grid-cols-4 lg:overflow-visible xl:grid-cols-8 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]"
+        role="group"
+        aria-label="Filtrar artículos por categoría"
+      >
+        <CategoryButton
+          name="Todos"
+          count={stats.itemCount}
+          active={activeSlug === "todos"}
+          onClick={() => onSelect("todos")}
+        />
+        {sections.map((section) => (
+          <CategoryButton
+            key={section.category._id}
+            name={section.category.name}
+            count={section.items.length}
+            active={activeSlug === section.category.slug}
+            onClick={() => onSelect(section.category.slug)}
+          />
+        ))}
+      </div>
+    </section>
+  );
+}
+
+function CategoryButton({
+  name,
+  count,
+  active,
+  onClick,
+}: {
+  name: string;
+  count: number;
+  active: boolean;
+  onClick: () => void;
+}) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      aria-pressed={active}
+      className={`grid min-w-[9rem] shrink-0 snap-start gap-1 rounded-2xl border px-4 py-3 text-left transition focus:outline-none focus:ring-2 focus:ring-brand-gold focus:ring-offset-2 focus:ring-offset-brand-warm-white lg:min-w-0 ${
+        active
+          ? "border-brand-ruby bg-brand-ruby text-white shadow-sm"
+          : "border-brand-champagne bg-white text-brand-charcoal hover:border-brand-gold"
+      }`}
+    >
+      <span className="text-sm font-bold leading-tight">{name}</span>
+      <span
+        className={`text-xs font-semibold ${
+          active ? "text-white/70" : "text-brand-charcoal/48"
+        }`}
+      >
+        {count} {count === 1 ? "pieza" : "piezas"}
+      </span>
+    </button>
+  );
+}
+
+function CatalogStatus({
+  showingAll,
+  activeSection,
+  itemCount,
+}: {
+  showingAll: boolean;
+  activeSection?: CatalogSection;
+  itemCount: number;
+}) {
+  return (
+    <div className="mt-5 flex flex-col gap-2 text-sm text-brand-charcoal/62 sm:flex-row sm:items-center sm:justify-between">
+      <p>
+        {showingAll
+          ? `Mostrando todo el catálogo por familia: ${itemCount} piezas.`
+          : `Mostrando solo ${
+              activeSection?.category.name ?? "esta categoría"
+            }.`}
+      </p>
+      <p className="font-semibold text-brand-charcoal/72">
+        Agrega varias piezas y envía una sola cotización.
+      </p>
+    </div>
+  );
+}
+
+function ShowroomSection({
+  section,
+  showingAll,
+  onViewCategory,
+  children,
+}: {
+  section: CatalogSection;
+  showingAll: boolean;
+  onViewCategory: () => void;
+  children: React.ReactNode;
+}) {
+  const summary =
+    CATEGORY_SUMMARIES[section.category.slug] ??
+    "Piezas disponibles para integrar a tu montaje.";
+
+  return (
+    <section>
+      <div className="mb-6 grid gap-4 border-b border-brand-champagne pb-5 lg:grid-cols-[0.72fr_1fr_auto] lg:items-end">
+        <div>
+          <p className="text-xs font-bold uppercase tracking-[0.18em] text-brand-ruby">
+            {section.items.length} {section.items.length === 1 ? "pieza" : "piezas"}
+          </p>
+          <h2 className="mt-2 font-playfair text-3xl font-bold text-brand-charcoal sm:text-4xl">
+            {section.category.name}
+          </h2>
+        </div>
+        <p className="max-w-2xl text-sm leading-7 text-brand-charcoal/62">
+          {summary}
+        </p>
+        {showingAll && (
+          <button
+            type="button"
+            onClick={onViewCategory}
+            aria-label={`Ver solo ${section.category.name}`}
+            className="inline-flex items-center justify-center rounded-full border border-brand-champagne bg-white px-5 py-3 text-sm font-bold text-brand-charcoal transition hover:border-brand-ruby hover:text-brand-ruby focus:outline-none focus:ring-2 focus:ring-brand-ruby focus:ring-offset-2 focus:ring-offset-brand-warm-white"
+          >
+            Ver solo esta familia
+          </button>
+        )}
+      </div>
+
+      <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 xl:grid-cols-3">
+        {children}
+      </div>
+    </section>
+  );
+}
+
+function QuoteTray({
   selectedNames,
   quoteDetails,
   quoteUrl,
@@ -221,68 +417,103 @@ function QuoteSummary({
   onClear: () => void;
 }) {
   return (
-    <section className="sticky top-[7.8rem] z-10 mt-6 rounded-[1.75rem] border border-brand-champagne bg-white p-5 shadow-[0_22px_70px_rgba(24,22,21,0.12)]">
-      <div className="grid gap-5 lg:grid-cols-[0.9fr_1fr_auto] lg:items-end">
-        <div>
-          <p className="text-sm font-bold text-brand-ruby">
-            {selectedNames.length} artículo
-            {selectedNames.length === 1 ? "" : "s"} seleccionado
-            {selectedNames.length === 1 ? "" : "s"}
-          </p>
-          <div className="mt-3 flex flex-wrap gap-2">
-            {selectedNames.map((name) => (
-              <button
-                type="button"
-                key={name}
-                onClick={() => onRemove(name)}
-                className="rounded-full bg-brand-warm-white px-3 py-1.5 text-xs font-bold text-brand-charcoal transition hover:bg-brand-champagne"
-                aria-label={`Quitar ${name}`}
-              >
-                {name} x
-              </button>
-            ))}
-          </div>
-        </div>
-
-        <div className="grid gap-3 sm:grid-cols-3">
-          <InputField
-            label="Tipo de evento"
-            value={quoteDetails.eventType}
-            onChange={(value) => onChange("eventType", value)}
-          />
-          <InputField
-            label="Invitados"
-            value={quoteDetails.guestCount}
-            inputMode="numeric"
-            onChange={(value) => onChange("guestCount", value)}
-          />
-          <InputField
-            label="Zona"
-            value={quoteDetails.location}
-            onChange={(value) => onChange("location", value)}
-          />
-        </div>
-
-        <div className="flex gap-2 lg:flex-col">
-          <a
-            href={quoteUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex flex-1 items-center justify-center gap-2 rounded-full bg-[#25D366] px-5 py-3 text-sm font-bold text-white transition hover:bg-[#20BD5A] focus:outline-none focus:ring-2 focus:ring-[#25D366] focus:ring-offset-2 active:translate-y-px lg:flex-none"
-          >
-            <WhatsAppIcon size={17} />
-            Enviar
-          </a>
-          <button
-            type="button"
-            onClick={onClear}
-            className="inline-flex flex-1 items-center justify-center rounded-full border border-brand-champagne px-5 py-3 text-sm font-bold text-brand-charcoal transition hover:border-brand-ruby hover:text-brand-ruby lg:flex-none"
-          >
-            Limpiar
-          </button>
+    <aside
+      id="quote-tray"
+      className="order-1 scroll-mt-24 rounded-[2rem] border border-brand-champagne bg-white p-5 shadow-[0_22px_70px_rgba(24,22,21,0.12)] lg:sticky lg:top-28 lg:order-2 lg:self-start"
+    >
+      <div className="rounded-[1.5rem] bg-brand-charcoal p-5 text-white">
+        <p className="text-sm font-bold text-brand-gold">Tu lista</p>
+        <h2 className="mt-2 font-playfair text-2xl font-bold">
+          {selectedNames.length} artículo
+          {selectedNames.length === 1 ? "" : "s"} para cotizar
+        </h2>
+        <div className="mt-4 flex flex-wrap gap-2">
+          {selectedNames.map((name) => (
+            <button
+              type="button"
+              key={name}
+              onClick={() => onRemove(name)}
+              className="rounded-full border border-white/10 bg-white/[0.08] px-3 py-1.5 text-xs font-bold text-white/84 transition hover:border-brand-gold hover:text-brand-champagne"
+              aria-label={`Quitar ${name}`}
+            >
+              {name} x
+            </button>
+          ))}
         </div>
       </div>
-    </section>
+
+      <div className="mt-5 grid gap-3">
+        <InputField
+          label="Fecha"
+          value={quoteDetails.eventDate}
+          onChange={(value) => onChange("eventDate", value)}
+        />
+        <InputField
+          label="Tipo de evento"
+          value={quoteDetails.eventType}
+          onChange={(value) => onChange("eventType", value)}
+        />
+        <InputField
+          label="Invitados"
+          value={quoteDetails.guestCount}
+          inputMode="numeric"
+          onChange={(value) => onChange("guestCount", value)}
+        />
+        <InputField
+          label="Zona"
+          value={quoteDetails.location}
+          onChange={(value) => onChange("location", value)}
+        />
+      </div>
+
+      <div className="mt-5 grid gap-2">
+        <a
+          href={quoteUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-flex items-center justify-center gap-2 rounded-full bg-brand-ruby px-5 py-3.5 text-sm font-bold text-white transition hover:bg-brand-ruby/90 focus:outline-none focus:ring-2 focus:ring-brand-ruby focus:ring-offset-2 active:translate-y-px"
+        >
+          <WhatsAppIcon size={17} />
+          Cotizar por WhatsApp
+        </a>
+        <button
+          type="button"
+          onClick={onClear}
+          className="inline-flex items-center justify-center rounded-full border border-brand-champagne px-5 py-3 text-sm font-bold text-brand-charcoal transition hover:border-brand-ruby hover:text-brand-ruby"
+        >
+          Limpiar selección
+        </button>
+      </div>
+    </aside>
+  );
+}
+
+function MobileQuoteBar({
+  selectedCount,
+  quoteUrl,
+}: {
+  selectedCount: number;
+  quoteUrl: string;
+}) {
+  return (
+    <a
+      href={quoteUrl}
+      target="_blank"
+      rel="noopener noreferrer"
+      aria-label={`${selectedCount} artículo${
+        selectedCount === 1 ? "" : "s"
+      } seleccionado${
+        selectedCount === 1 ? "" : "s"
+      }. Cotizar por WhatsApp.`}
+      className="fixed inset-x-4 bottom-[calc(1rem+env(safe-area-inset-bottom))] z-40 flex items-center justify-between rounded-full border border-white/16 bg-brand-charcoal px-5 py-3 text-sm font-bold text-white shadow-[0_18px_50px_rgba(24,22,21,0.28)] focus:outline-none focus:ring-2 focus:ring-brand-gold focus:ring-offset-2 focus:ring-offset-brand-warm-white lg:hidden"
+    >
+      <span>
+        {selectedCount} seleccionado{selectedCount === 1 ? "" : "s"}
+      </span>
+      <span className="rounded-full bg-brand-gold px-3 py-1.5 text-xs text-brand-charcoal">
+        WhatsApp
+      </span>
+    </a>
   );
 }
 
@@ -313,26 +544,19 @@ function InputField({
   );
 }
 
-function FilterPill({
-  label,
-  active,
-  onClick,
-}: {
-  label: string;
-  active: boolean;
-  onClick: () => void;
-}) {
+function EmptyCatalogState({ onReset }: { onReset: () => void }) {
   return (
-    <button
-      type="button"
-      onClick={onClick}
-      className={`shrink-0 whitespace-nowrap rounded-full px-4 py-2 text-sm font-bold transition-all ${
-        active
-          ? "bg-brand-ruby text-white shadow-sm"
-          : "border border-brand-champagne bg-white text-brand-charcoal/72 hover:border-brand-gold hover:text-brand-gold"
-      }`}
-    >
-      {label}
-    </button>
+    <div className="rounded-[2rem] border border-brand-champagne bg-white px-6 py-16 text-center text-brand-charcoal/62">
+      <p className="font-playfair text-3xl font-bold text-brand-charcoal">
+        No hay artículos en esta categoría todavía.
+      </p>
+      <button
+        type="button"
+        onClick={onReset}
+        className="mt-5 rounded-full bg-brand-charcoal px-6 py-3 text-sm font-bold text-white transition hover:bg-brand-ruby"
+      >
+        Ver catálogo completo
+      </button>
+    </div>
   );
 }

@@ -30,8 +30,8 @@ export default function ProcessSection() {
               Menos mensajes sueltos, más claridad desde el inicio.
             </h2>
             <p className="mt-5 text-base leading-8 text-white/65">
-              La página debe preparar la venta antes del primer WhatsApp:
-              artículos, evento, invitados y zona.
+              Cuando el primer mensaje trae artículos, fecha, invitados y zona,
+              la disponibilidad se revisa más rápido.
             </p>
           </div>
 

@@ -56,7 +56,7 @@ export default function FeaturedGallery({ items }: FeaturedGalleryProps) {
                     ? "(max-width: 768px) 100vw, 50vw"
                     : "(max-width: 768px) 100vw, 25vw"
                 }
-                className="object-cover transition duration-700 group-hover:scale-[1.04]"
+                className="object-cover transition duration-700 group-hover:scale-[1.04] motion-reduce:transform-none motion-reduce:transition-none"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-brand-charcoal/72 via-transparent to-transparent" />
               <figcaption className="absolute bottom-0 left-0 right-0 p-5 font-playfair text-xl font-bold text-white">

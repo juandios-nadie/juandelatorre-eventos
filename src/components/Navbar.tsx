@@ -12,14 +12,31 @@ const NAV_LINKS = [
   { href: "/#contacto", label: "Contacto" },
 ];
 
-export default function Navbar() {
+interface NavbarProps {
+  quoteHref?: string;
+  quoteLabel?: string;
+}
+
+export default function Navbar({
+  quoteHref = WHATSAPP_URL,
+  quoteLabel = "Cotizar por WhatsApp",
+}: NavbarProps) {
   const [menuOpen, setMenuOpen] = useState(false);
+  const quoteIsExternal = quoteHref.startsWith("http");
+  const quoteButtonClass =
+    "items-center gap-2 rounded-full bg-[#075E54] px-4 py-2 text-sm font-bold text-white transition-colors hover:bg-[#064D45] focus:outline-none focus:ring-2 focus:ring-[#25D366] focus:ring-offset-2 focus:ring-offset-brand-charcoal";
+  const mobileQuoteClass =
+    "flex w-fit items-center gap-2 rounded-full bg-[#075E54] px-4 py-2.5 text-sm font-bold text-white transition-colors hover:bg-[#064D45] focus:outline-none focus:ring-2 focus:ring-[#25D366] focus:ring-offset-2 focus:ring-offset-brand-charcoal";
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 border-b border-white/10 bg-brand-charcoal/92 backdrop-blur-md">
       <nav className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6">
         {/* Wordmark */}
-        <Link href="/" className="group flex items-center gap-3 leading-none">
+        <Link
+          href="/"
+          aria-label="Ir al inicio de Juan de la Torre Eventos"
+          className="group flex items-center gap-3 leading-none"
+        >
           <Image
             src="/logo.jpg"
             alt=""
@@ -52,22 +69,30 @@ export default function Navbar() {
         </ul>
 
         {/* Desktop CTA */}
-        <a
-          href={WHATSAPP_URL}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="hidden items-center gap-2 rounded-full bg-[#25D366] px-4 py-2 text-sm font-bold text-white transition-colors hover:bg-[#20BD5A] focus:outline-none focus:ring-2 focus:ring-[#25D366] focus:ring-offset-2 focus:ring-offset-brand-charcoal md:flex"
-        >
-          <WhatsAppIcon size={16} />
-          Cotizar
-        </a>
+        {quoteIsExternal ? (
+          <a
+            href={quoteHref}
+            target="_blank"
+            rel="noopener noreferrer"
+            className={`hidden md:flex ${quoteButtonClass}`}
+          >
+            <WhatsAppIcon size={16} />
+            {quoteLabel}
+          </a>
+        ) : (
+          <Link href={quoteHref} className={`hidden md:flex ${quoteButtonClass}`}>
+            <WhatsAppIcon size={16} />
+            {quoteLabel}
+          </Link>
+        )}
 
         {/* Mobile hamburger */}
         <button
           onClick={() => setMenuOpen((o) => !o)}
-          className="p-2 text-brand-champagne md:hidden"
-          aria-label="Abrir menú"
+          className="flex min-h-11 min-w-11 items-center justify-center rounded-full text-brand-champagne transition hover:bg-white/8 focus:outline-none focus:ring-2 focus:ring-brand-gold focus:ring-offset-2 focus:ring-offset-brand-charcoal md:hidden"
+          aria-label={menuOpen ? "Cerrar menú" : "Abrir menú"}
           aria-expanded={menuOpen}
+          aria-controls="mobile-navigation"
         >
           {menuOpen ? <XIcon /> : <MenuIcon />}
         </button>
@@ -75,29 +100,43 @@ export default function Navbar() {
 
       {/* Mobile menu */}
       {menuOpen && (
-        <div className="border-t border-white/10 bg-brand-charcoal px-6 pb-6 md:hidden">
+        <div
+          id="mobile-navigation"
+          className="border-t border-white/10 bg-brand-charcoal px-6 pb-6 md:hidden"
+        >
           <ul className="flex flex-col gap-4 pt-4">
             {NAV_LINKS.map(({ href, label }) => (
               <li key={href}>
                 <Link
                   href={href}
                   onClick={() => setMenuOpen(false)}
-                  className="block text-sm font-medium text-brand-champagne/82 transition-colors hover:text-brand-gold"
+                  className="block py-3 text-sm font-medium text-brand-champagne/82 transition-colors hover:text-brand-gold focus:outline-none focus:ring-2 focus:ring-brand-gold focus:ring-offset-2 focus:ring-offset-brand-charcoal"
                 >
                   {label}
                 </Link>
               </li>
             ))}
             <li>
-              <a
-                href={WHATSAPP_URL}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex w-fit items-center gap-2 rounded-full bg-[#25D366] px-4 py-2.5 text-sm font-bold text-white"
-              >
-                <WhatsAppIcon size={16} />
-                Cotizar por WhatsApp
-              </a>
+              {quoteIsExternal ? (
+                <a
+                  href={quoteHref}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={mobileQuoteClass}
+                >
+                  <WhatsAppIcon size={16} />
+                  {quoteLabel}
+                </a>
+              ) : (
+                <Link
+                  href={quoteHref}
+                  onClick={() => setMenuOpen(false)}
+                  className={mobileQuoteClass}
+                >
+                  <WhatsAppIcon size={16} />
+                  {quoteLabel}
+                </Link>
+              )}
             </li>
           </ul>
         </div>

@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useMemo, useState } from "react";
 import { WHATSAPP_NUMBER } from "@/lib/constants";
-import { buildQuoteUrl } from "@/lib/quote";
+import { buildQuoteMessage, buildQuoteUrl } from "@/lib/quote";
 import WhatsAppIcon from "./WhatsAppIcon";
 
 interface SecondaryAction {
@@ -42,20 +42,24 @@ const FIELD_CONFIG = [
   },
   {
     key: "items",
-    label: "Artículos que te gustaron",
-    placeholder: "Ej. sillas Tiffany y mesas",
+    label: "Notas o artículos específicos",
+    placeholder: "Ej. sillas Tiffany, mesa nogal",
     inputMode: "text",
   },
 ] as const;
 
 type FieldKey = (typeof FIELD_CONFIG)[number]["key"];
-type FormState = Record<FieldKey, string>;
+type FormState = Record<FieldKey, string> & { eventType: string };
+
+const EVENT_TYPES = ["Boda", "XV años", "Cumpleaños", "Empresa", "Jardín"];
+const ITEM_CHIPS = ["Sillas", "Mesas", "Toldos", "Cristalería", "Escenario"];
 
 const EMPTY_FORM: FormState = {
   eventDate: "",
   location: "",
   guestCount: "",
   items: "",
+  eventType: "",
 };
 
 export default function QuickQuoteForm({
@@ -64,21 +68,41 @@ export default function QuickQuoteForm({
   secondaryAction,
 }: QuickQuoteFormProps) {
   const [form, setForm] = useState<FormState>(EMPTY_FORM);
+  const [selectedItems, setSelectedItems] = useState<string[]>([]);
 
-  const quoteUrl = useMemo(
-    () =>
-      buildQuoteUrl({
-        number,
-        eventDate: form.eventDate,
-        guestCount: form.guestCount,
-        location: form.location,
-        items: form.items ? [form.items] : [],
-      }),
-    [form, number]
+  const quoteItems = useMemo(() => {
+    const customItems = form.items.trim() ? [form.items.trim()] : [];
+    return [...selectedItems, ...customItems];
+  }, [form.items, selectedItems]);
+
+  const quoteInput = useMemo(
+    () => ({
+      number,
+      eventDate: form.eventDate,
+      eventType: form.eventType,
+      guestCount: form.guestCount,
+      location: form.location,
+      items: quoteItems,
+    }),
+    [form, number, quoteItems]
+  );
+
+  const quoteUrl = useMemo(() => buildQuoteUrl(quoteInput), [quoteInput]);
+  const quotePreview = useMemo(
+    () => buildQuoteMessage(quoteInput),
+    [quoteInput]
   );
 
   function updateField(key: FieldKey, value: string) {
     setForm((current) => ({ ...current, [key]: value }));
+  }
+
+  function toggleItem(item: string) {
+    setSelectedItems((current) =>
+      current.includes(item)
+        ? current.filter((selected) => selected !== item)
+        : [...current, item]
+    );
   }
 
   const secondary =
@@ -88,7 +112,7 @@ export default function QuickQuoteForm({
       href={quoteUrl}
       target="_blank"
       rel="noopener noreferrer"
-      className="inline-flex min-h-14 flex-1 items-center justify-center gap-3 rounded-full bg-[#25D366] px-6 py-3.5 text-sm font-bold text-white transition hover:bg-[#20BD5A] focus:outline-none focus:ring-2 focus:ring-[#25D366] focus:ring-offset-2 focus:ring-offset-brand-charcoal active:translate-y-px sm:flex-none"
+      className="inline-flex min-h-14 flex-1 items-center justify-center gap-3 rounded-full bg-[#075E54] px-6 py-3.5 text-sm font-bold text-white transition hover:bg-[#064D45] focus:outline-none focus:ring-2 focus:ring-[#25D366] focus:ring-offset-2 focus:ring-offset-brand-charcoal active:translate-y-px sm:flex-none"
     >
       <WhatsAppIcon size={18} />
       {submitLabel}
@@ -97,6 +121,65 @@ export default function QuickQuoteForm({
 
   return (
     <div>
+      <fieldset className="mb-5">
+        <legend className="text-xs font-bold text-brand-champagne/76">
+          Tipo de evento
+        </legend>
+        <div className="mt-2 flex flex-wrap gap-2">
+          {EVENT_TYPES.map((type) => {
+            const selected = form.eventType === type;
+
+            return (
+              <button
+                key={type}
+                type="button"
+                aria-pressed={selected}
+                onClick={() =>
+                  setForm((current) => ({
+                    ...current,
+                    eventType: selected ? "" : type,
+                  }))
+                }
+                className={`rounded-full border px-3 py-2 text-xs font-bold transition focus:outline-none focus:ring-2 focus:ring-brand-gold focus:ring-offset-2 focus:ring-offset-brand-charcoal ${
+                  selected
+                    ? "border-brand-gold bg-brand-gold text-brand-charcoal"
+                    : "border-white/12 bg-white/[0.06] text-brand-champagne hover:bg-white/[0.1]"
+                }`}
+              >
+                {type}
+              </button>
+            );
+          })}
+        </div>
+      </fieldset>
+
+      <fieldset className="mb-5">
+        <legend className="text-xs font-bold text-brand-champagne/76">
+          Piezas de interés
+        </legend>
+        <div className="mt-2 flex flex-wrap gap-2">
+          {ITEM_CHIPS.map((item) => {
+            const selected = selectedItems.includes(item);
+
+            return (
+              <button
+                key={item}
+                type="button"
+                aria-pressed={selected}
+                onClick={() => toggleItem(item)}
+                className={`rounded-full border px-3 py-2 text-xs font-bold transition focus:outline-none focus:ring-2 focus:ring-brand-gold focus:ring-offset-2 focus:ring-offset-brand-charcoal ${
+                  selected
+                    ? "border-brand-gold bg-brand-gold text-brand-charcoal"
+                    : "border-white/12 bg-white/[0.06] text-brand-champagne hover:bg-white/[0.1]"
+                }`}
+              >
+                {item}
+              </button>
+            );
+          })}
+        </div>
+      </fieldset>
+
       <div className="grid gap-3 sm:grid-cols-2">
         {FIELD_CONFIG.map((field) => (
           <label
@@ -111,10 +194,19 @@ export default function QuickQuoteForm({
               onChange={(event) => updateField(field.key, event.target.value)}
               inputMode={field.inputMode}
               placeholder={field.placeholder}
-              className="min-w-0 bg-transparent text-sm font-semibold text-white outline-none placeholder:text-brand-champagne/42"
+              className="min-w-0 bg-transparent text-sm font-semibold text-white outline-none placeholder:text-brand-champagne/62"
             />
           </label>
         ))}
+      </div>
+
+      <div className="mt-5 rounded-2xl border border-white/10 bg-white/[0.045] p-4">
+        <p className="text-xs font-bold text-brand-champagne/76">
+          Mensaje preparado
+        </p>
+        <p className="mt-2 max-h-32 overflow-y-auto whitespace-pre-line text-xs leading-6 text-white/64">
+          {quotePreview}
+        </p>
       </div>
 
       <div className="mt-8 flex flex-col gap-3 sm:flex-row">
@@ -129,7 +221,7 @@ export default function QuickQuoteForm({
 function SecondaryActionButton({ action }: { action: SecondaryAction }) {
   const className =
     action.variant === "gold"
-      ? "inline-flex min-h-14 flex-1 items-center justify-center rounded-full bg-brand-gold px-6 py-3.5 text-sm font-bold text-white transition hover:bg-brand-gold/88 focus:outline-none focus:ring-2 focus:ring-brand-gold focus:ring-offset-2 focus:ring-offset-brand-charcoal active:translate-y-px sm:flex-none"
+      ? "inline-flex min-h-14 flex-1 items-center justify-center rounded-full bg-brand-gold px-6 py-3.5 text-sm font-bold text-brand-charcoal transition hover:bg-brand-champagne focus:outline-none focus:ring-2 focus:ring-brand-gold focus:ring-offset-2 focus:ring-offset-brand-charcoal active:translate-y-px sm:flex-none"
       : "inline-flex min-h-14 flex-1 items-center justify-center gap-3 rounded-full border border-white/16 bg-white/10 px-6 py-3.5 text-sm font-bold text-white transition hover:bg-white/16 focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-brand-charcoal active:translate-y-px sm:flex-none";
 
   if (action.external) {

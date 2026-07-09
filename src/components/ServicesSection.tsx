@@ -29,12 +29,12 @@ export default function ServicesSection({ categories }: ServicesSectionProps) {
               Catálogo de renta
             </p>
             <h2 className="mt-3 font-playfair text-4xl font-bold leading-tight text-brand-charcoal sm:text-5xl">
-              Lo que más preguntan por Facebook, ordenado para cotizar.
+              Elige rápido lo que necesitas para tu evento.
             </h2>
           </div>
           <p className="max-w-2xl text-base leading-8 text-brand-charcoal/68 lg:justify-self-end">
-            La intención es simple: que cada cliente vea rápido si hay lo que
-            necesita y llegue a WhatsApp con una selección inicial.
+            Explora por tipo de pieza y entra al catálogo con el filtro listo
+            para comparar opciones antes de escribir por WhatsApp.
           </p>
         </div>
 
@@ -43,7 +43,7 @@ export default function ServicesSection({ categories }: ServicesSectionProps) {
             <Link
               key={cat._id}
               href={`/catalogo?categoria=${cat.slug}`}
-              className={`group relative min-h-72 overflow-hidden rounded-[1.75rem] border border-brand-champagne bg-brand-charcoal shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-xl focus:outline-none focus:ring-2 focus:ring-brand-gold focus:ring-offset-2 focus:ring-offset-brand-warm-white ${
+              className={`group relative min-h-72 overflow-hidden rounded-[1.75rem] border border-brand-champagne bg-brand-charcoal shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-xl focus:outline-none focus:ring-2 focus:ring-brand-gold focus:ring-offset-2 focus:ring-offset-brand-warm-white motion-reduce:transform-none motion-reduce:transition-none ${
                 index === 0 || index === 1 ? "lg:col-span-2" : ""
               }`}
             >
@@ -56,9 +56,9 @@ export default function ServicesSection({ categories }: ServicesSectionProps) {
                     ? "(max-width: 768px) 100vw, 50vw"
                     : "(max-width: 768px) 100vw, 25vw"
                 }
-                className="object-cover opacity-[0.82] transition duration-700 group-hover:scale-[1.04]"
+                className="object-cover opacity-[0.9] transition duration-700 group-hover:scale-[1.04] motion-reduce:transform-none motion-reduce:transition-none"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-brand-charcoal via-brand-charcoal/34 to-transparent" />
+              <div className="absolute inset-0 bg-gradient-to-t from-brand-charcoal via-brand-charcoal/22 to-transparent" />
               <div className="absolute inset-x-0 bottom-0 p-5 sm:p-6">
                 <h3 className="font-playfair text-2xl font-bold text-white">
                   {cat.name}
@@ -66,6 +66,9 @@ export default function ServicesSection({ categories }: ServicesSectionProps) {
                 <p className="mt-2 max-w-sm text-sm leading-6 text-white/68">
                   {CATEGORY_COPY[cat.slug] ?? "Piezas para completar tu evento."}
                 </p>
+                <span className="mt-4 inline-flex rounded-full bg-white px-4 py-2 text-xs font-bold text-brand-charcoal transition group-hover:bg-brand-gold group-hover:text-brand-charcoal">
+                  Ver {cat.name.toLowerCase()}
+                </span>
               </div>
             </Link>
           ))}

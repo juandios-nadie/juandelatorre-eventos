@@ -35,8 +35,8 @@ export default function EventTypesSection() {
             El mobiliario tiene que verse bien y llegar completo.
           </h2>
           <p className="mt-5 text-base leading-8 text-brand-charcoal/68">
-            La página debe ayudar a decidir rápido: qué necesitan, qué estilo
-            queda mejor y qué datos mandar para cotizar sin vueltas.
+            Decide rápido qué tipo de montaje necesitas, qué estilo queda mejor
+            y qué datos conviene mandar para cotizar sin vueltas.
           </p>
         </div>
 
@@ -58,7 +58,7 @@ export default function EventTypesSection() {
                       ? "(max-width: 768px) 100vw, 50vw"
                       : "(max-width: 768px) 100vw, 25vw"
                   }
-                  className="object-cover transition duration-700 group-hover:scale-[1.04]"
+                  className="object-cover transition duration-700 group-hover:scale-[1.04] motion-reduce:transform-none motion-reduce:transition-none"
                 />
               </div>
               <div className="flex flex-col justify-end p-6 sm:p-8">
