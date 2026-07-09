@@ -1,77 +1,70 @@
 import Image from "next/image";
 import Link from "next/link";
 import type { RentalItem } from "@/lib/sanity";
+import { urlFor } from "@/lib/sanity";
 import { STATIC_PHOTOS } from "@/lib/staticData";
-import ProductCard from "./ProductCard";
 
 interface FeaturedGalleryProps {
   items: RentalItem[];
 }
 
 export default function FeaturedGallery({ items }: FeaturedGalleryProps) {
+  const photos =
+    items.length > 0
+      ? items.slice(0, 6).map((item) => ({
+          src: item.photo
+            ? urlFor(item.photo).width(900).height(700).fit("crop").quality(82).url()
+            : "/images/hero.jpeg",
+          label: item.name,
+        }))
+      : STATIC_PHOTOS;
+
   return (
-    <section className="py-20 px-4 bg-white">
-      <div className="max-w-6xl mx-auto">
-        {/* Heading */}
-        <div className="text-center mb-14">
-          <p className="text-brand-gold text-xs tracking-[0.4em] uppercase mb-3 font-light">
-            Galería
-          </p>
-          <h2 className="font-playfair text-brand-charcoal text-3xl sm:text-4xl font-bold">
-            Trabajos Destacados
-          </h2>
-          <div className="h-px bg-brand-gold/40 max-w-[60px] mx-auto mt-5" />
+    <section className="bg-white px-4 py-20 sm:px-6 lg:px-8">
+      <div className="mx-auto max-w-7xl">
+        <div className="flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
+          <div className="max-w-2xl">
+            <p className="text-sm font-bold text-brand-ruby">
+              Montajes reales
+            </p>
+            <h2 className="mt-3 font-playfair text-4xl font-bold leading-tight text-brand-charcoal sm:text-5xl">
+              El inventario se entiende mejor cuando se ve en evento.
+            </h2>
+          </div>
+          <Link
+            href="/catalogo"
+            className="inline-flex w-fit items-center justify-center rounded-full border border-brand-gold px-6 py-3 text-sm font-bold text-brand-charcoal transition hover:bg-brand-gold hover:text-white focus:outline-none focus:ring-2 focus:ring-brand-gold focus:ring-offset-2 focus:ring-offset-white active:translate-y-px"
+          >
+            Ver catálogo
+          </Link>
         </div>
 
-        {items.length > 0 ? (
-          <>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-              {items.slice(0, 6).map((item) => (
-                <ProductCard key={item._id} item={item} />
-              ))}
-            </div>
-            {items.length > 6 && (
-              <div className="text-center mt-10">
-                <Link
-                  href="/catalogo"
-                  className="inline-block bg-brand-ruby hover:bg-brand-ruby/85 text-white font-medium px-8 py-3 rounded-full transition-all text-sm tracking-wide"
-                >
-                  Ver todos los artículos
-                </Link>
-              </div>
-            )}
-          </>
-        ) : (
-          <>
-            <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
-              {STATIC_PHOTOS.map((photo) => (
-                <div
-                  key={photo.src}
-                  className="group relative overflow-hidden rounded-2xl aspect-[4/3] shadow-sm hover:shadow-lg transition-shadow duration-300"
-                >
-                  <Image
-                    src={photo.src}
-                    alt={photo.label}
-                    fill
-                    className="object-cover group-hover:scale-105 transition-transform duration-500"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
-                  <span className="absolute bottom-3 left-3 text-white text-xs font-medium tracking-wide drop-shadow-md">
-                    {photo.label}
-                  </span>
-                </div>
-              ))}
-            </div>
-            <div className="text-center mt-10">
-              <Link
-                href="/catalogo"
-                className="inline-block bg-brand-ruby hover:bg-brand-ruby/85 text-white font-medium px-8 py-3 rounded-full transition-all text-sm tracking-wide"
-              >
-                Ver catálogo completo
-              </Link>
-            </div>
-          </>
-        )}
+        <div className="mt-12 grid auto-rows-[220px] gap-5 sm:grid-cols-2 lg:grid-cols-4">
+          {photos.map((photo, index) => (
+            <figure
+              key={`${photo.src}-${photo.label}`}
+              className={`group relative overflow-hidden rounded-[1.75rem] bg-brand-charcoal ${
+                index === 0 ? "sm:col-span-2 sm:row-span-2" : ""
+              } ${index === 3 ? "lg:row-span-2" : ""}`}
+            >
+              <Image
+                src={photo.src}
+                alt={photo.label}
+                fill
+                sizes={
+                  index === 0
+                    ? "(max-width: 768px) 100vw, 50vw"
+                    : "(max-width: 768px) 100vw, 25vw"
+                }
+                className="object-cover transition duration-700 group-hover:scale-[1.04]"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-brand-charcoal/72 via-transparent to-transparent" />
+              <figcaption className="absolute bottom-0 left-0 right-0 p-5 font-playfair text-xl font-bold text-white">
+                {photo.label}
+              </figcaption>
+            </figure>
+          ))}
+        </div>
       </div>
     </section>
   );

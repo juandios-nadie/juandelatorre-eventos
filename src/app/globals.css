@@ -1,11 +1,11 @@
 @import "tailwindcss";
 
 :root {
-  --brand-gold: #C8922A;
-  --brand-ruby: #8B1A1A;
-  --brand-champagne: #F2E4C4;
-  --brand-warm-white: #FAF8F3;
-  --brand-charcoal: #1C1C1E;
+  --brand-gold: #B8842F;
+  --brand-ruby: #7F1D1D;
+  --brand-champagne: #EFE1BD;
+  --brand-warm-white: #F7F3EA;
+  --brand-charcoal: #181615;
 }
 
 @theme inline {
@@ -16,11 +16,16 @@
   --color-brand-charcoal: var(--brand-charcoal);
 
   --font-playfair: var(--font-playfair-display);
-  --font-sans: var(--font-inter);
+  --font-sans: var(--font-manrope);
 }
 
 body {
   background: var(--brand-warm-white);
   color: var(--brand-charcoal);
-  font-family: var(--font-inter), system-ui, sans-serif;
+  font-family: var(--font-manrope), system-ui, sans-serif;
+}
+
+::selection {
+  background: var(--brand-gold);
+  color: white;
 }

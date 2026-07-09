@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Playfair_Display, Inter } from "next/font/google";
+import { Manrope, Playfair_Display } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import FloatingWhatsApp from "@/components/FloatingWhatsApp";
@@ -12,9 +12,10 @@ const playfairDisplay = Playfair_Display({
   weight: ["400", "700"],
 });
 
-const inter = Inter({
-  variable: "--font-inter",
+const manrope = Manrope({
+  variable: "--font-manrope",
   subsets: ["latin"],
+  weight: ["400", "500", "600", "700", "800"],
 });
 
 const OG_TITLE = "Juan de la Torre Eventos | Renta de Mobiliario en Guadalajara";
@@ -53,7 +54,7 @@ export const metadata: Metadata = {
         url: "/images/hero.jpeg",
         width: 1200,
         height: 630,
-        alt: "Juan de la Torre Eventos — renta de mobiliario en Guadalajara",
+        alt: "Juan de la Torre Eventos, renta de mobiliario en Guadalajara",
       },
     ],
   },
@@ -76,7 +77,7 @@ export default function RootLayout({
   return (
     <html
       lang="es"
-      className={`${playfairDisplay.variable} ${inter.variable} h-full`}
+      className={`${playfairDisplay.variable} ${manrope.variable} h-full`}
     >
       <body className="min-h-full flex flex-col antialiased">
         {children}

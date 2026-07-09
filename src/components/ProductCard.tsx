@@ -11,9 +11,19 @@ interface ProductCardProps {
   item: RentalItem;
   localImageSrc?: string;
   localImageSrcs?: string[];
+  selected?: boolean;
+  onToggle?: () => void;
+  priority?: boolean;
 }
 
-export default function ProductCard({ item, localImageSrc, localImageSrcs }: ProductCardProps) {
+export default function ProductCard({
+  item,
+  localImageSrc,
+  localImageSrcs,
+  selected = false,
+  onToggle,
+  priority = false,
+}: ProductCardProps) {
   const sanityUrl = item.photo
     ? urlFor(item.photo).width(600).height(480).fit("crop").quality(80).url()
     : null;
@@ -31,15 +41,23 @@ export default function ProductCard({ item, localImageSrc, localImageSrcs }: Pro
   const imageUrl = images[current] ?? null;
 
   return (
-    <article className="group bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-lg border border-brand-champagne hover:border-brand-gold/40 transition-all duration-300 flex flex-col">
+    <article
+      className={`group flex flex-col overflow-hidden rounded-[1.5rem] border bg-white shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-xl ${
+        selected
+          ? "border-brand-ruby ring-2 ring-brand-ruby/18"
+          : "border-brand-champagne hover:border-brand-gold/50"
+      }`}
+    >
       {/* Image */}
-      <div className="relative h-64 bg-brand-champagne/40 overflow-hidden">
+      <div className="relative h-64 overflow-hidden bg-brand-champagne/32">
         {imageUrl ? (
           <Image
             src={imageUrl}
             alt={item.name}
             fill
-            className="object-contain group-hover:scale-105 transition-transform duration-500"
+            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+            priority={priority}
+            className="object-cover transition duration-700 group-hover:scale-[1.04]"
           />
         ) : (
           <div className="w-full h-full bg-gradient-to-br from-brand-champagne/40 to-brand-champagne/80 flex flex-col items-center justify-center gap-2">
@@ -53,11 +71,26 @@ export default function ProductCard({ item, localImageSrc, localImageSrcs }: Pro
         )}
 
         {/* Category badge */}
-        <div className="absolute top-3 left-3">
-          <span className="bg-brand-ruby/90 text-white text-[10px] font-medium tracking-wide uppercase px-2.5 py-1 rounded-full">
+        <div className="absolute left-3 top-3">
+          <span className="rounded-full bg-brand-charcoal/82 px-3 py-1.5 text-[10px] font-bold uppercase tracking-wide text-white backdrop-blur-sm">
             {item.category?.name}
           </span>
         </div>
+
+        {onToggle && (
+          <button
+            type="button"
+            onClick={onToggle}
+            className={`absolute right-3 top-3 rounded-full px-3 py-1.5 text-[11px] font-bold transition focus:outline-none focus:ring-2 focus:ring-brand-gold focus:ring-offset-2 ${
+              selected
+                ? "bg-brand-ruby text-white"
+                : "bg-white/92 text-brand-charcoal hover:bg-brand-champagne"
+            }`}
+            aria-pressed={selected}
+          >
+            {selected ? "Seleccionado" : "Agregar"}
+          </button>
+        )}
 
         {/* Dot navigation — only when multiple images */}
         {images.length > 1 && (
@@ -77,12 +110,12 @@ export default function ProductCard({ item, localImageSrc, localImageSrcs }: Pro
       </div>
 
       {/* Body */}
-      <div className="p-4 flex flex-col flex-1">
-        <h3 className="font-playfair font-bold text-brand-charcoal text-base mb-1 leading-snug">
+      <div className="flex flex-1 flex-col p-5">
+        <h3 className="font-playfair text-xl font-bold leading-snug text-brand-charcoal">
           {item.name}
         </h3>
         {item.description && (
-          <p className="text-brand-charcoal/60 text-xs leading-relaxed line-clamp-2 mb-3">
+          <p className="mt-2 mb-4 line-clamp-3 text-sm leading-6 text-brand-charcoal/62">
             {item.description}
           </p>
         )}
@@ -91,7 +124,7 @@ export default function ProductCard({ item, localImageSrc, localImageSrcs }: Pro
           href={whatsappItemUrl(item.name)}
           target="_blank"
           rel="noopener noreferrer"
-          className="mt-auto flex items-center justify-center gap-2 bg-[#25D366] hover:bg-[#20BD5A] text-white text-xs font-medium px-4 py-2.5 rounded-full transition-colors"
+          className="mt-auto flex items-center justify-center gap-2 rounded-full bg-[#25D366] px-4 py-3 text-sm font-bold text-white transition hover:bg-[#20BD5A] focus:outline-none focus:ring-2 focus:ring-[#25D366] focus:ring-offset-2 active:translate-y-px"
         >
           <WhatsAppIcon size={14} />
           Cotizar este artículo

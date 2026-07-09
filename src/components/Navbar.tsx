@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { useState } from "react";
 import { WHATSAPP_URL } from "@/lib/constants";
 import WhatsAppIcon from "./WhatsAppIcon";
@@ -15,15 +16,24 @@ export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 bg-brand-charcoal/95 backdrop-blur-sm border-b border-brand-gold/20">
-      <nav className="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
+    <header className="fixed top-0 left-0 right-0 z-50 border-b border-white/10 bg-brand-charcoal/92 backdrop-blur-md">
+      <nav className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6">
         {/* Wordmark */}
-        <Link href="/" className="flex flex-col leading-none group">
-          <span className="font-playfair text-brand-gold font-bold tracking-widest text-xs uppercase group-hover:text-brand-champagne transition-colors">
-            Juan de la Torre
-          </span>
-          <span className="text-brand-champagne/70 font-light tracking-[0.3em] text-[10px] uppercase mt-0.5 group-hover:text-brand-champagne transition-colors">
-            Eventos
+        <Link href="/" className="group flex items-center gap-3 leading-none">
+          <Image
+            src="/logo.jpg"
+            alt=""
+            width={36}
+            height={36}
+            className="h-9 w-9 rounded-xl border border-white/12 object-cover"
+          />
+          <span className="hidden flex-col sm:flex">
+            <span className="font-playfair text-sm font-bold text-brand-gold transition-colors group-hover:text-brand-champagne">
+              Juan de la Torre
+            </span>
+            <span className="mt-0.5 text-[10px] font-semibold uppercase tracking-[0.3em] text-brand-champagne/72 transition-colors group-hover:text-brand-champagne">
+              Eventos
+            </span>
           </span>
         </Link>
 
@@ -33,7 +43,7 @@ export default function Navbar() {
             <li key={href}>
               <Link
                 href={href}
-                className="text-brand-champagne/80 hover:text-brand-gold text-sm tracking-wide transition-colors"
+                className="text-sm font-medium text-brand-champagne/82 transition-colors hover:text-brand-gold"
               >
                 {label}
               </Link>
@@ -46,7 +56,7 @@ export default function Navbar() {
           href={WHATSAPP_URL}
           target="_blank"
           rel="noopener noreferrer"
-          className="hidden md:flex items-center gap-2 bg-[#25D366] hover:bg-[#20BD5A] text-white text-sm font-medium px-4 py-2 rounded-full transition-colors"
+          className="hidden items-center gap-2 rounded-full bg-[#25D366] px-4 py-2 text-sm font-bold text-white transition-colors hover:bg-[#20BD5A] focus:outline-none focus:ring-2 focus:ring-[#25D366] focus:ring-offset-2 focus:ring-offset-brand-charcoal md:flex"
         >
           <WhatsAppIcon size={16} />
           Cotizar
@@ -55,8 +65,9 @@ export default function Navbar() {
         {/* Mobile hamburger */}
         <button
           onClick={() => setMenuOpen((o) => !o)}
-          className="md:hidden text-brand-champagne p-1"
+          className="p-2 text-brand-champagne md:hidden"
           aria-label="Abrir menú"
+          aria-expanded={menuOpen}
         >
           {menuOpen ? <XIcon /> : <MenuIcon />}
         </button>
@@ -64,14 +75,14 @@ export default function Navbar() {
 
       {/* Mobile menu */}
       {menuOpen && (
-        <div className="md:hidden bg-brand-charcoal border-t border-brand-gold/20 px-6 pb-6">
+        <div className="border-t border-white/10 bg-brand-charcoal px-6 pb-6 md:hidden">
           <ul className="flex flex-col gap-4 pt-4">
             {NAV_LINKS.map(({ href, label }) => (
               <li key={href}>
                 <Link
                   href={href}
                   onClick={() => setMenuOpen(false)}
-                  className="text-brand-champagne/80 hover:text-brand-gold text-sm tracking-wide block transition-colors"
+                  className="block text-sm font-medium text-brand-champagne/82 transition-colors hover:text-brand-gold"
                 >
                   {label}
                 </Link>
@@ -82,7 +93,7 @@ export default function Navbar() {
                 href={WHATSAPP_URL}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-2 bg-[#25D366] text-white text-sm font-medium px-4 py-2.5 rounded-full w-fit"
+                className="flex w-fit items-center gap-2 rounded-full bg-[#25D366] px-4 py-2.5 text-sm font-bold text-white"
               >
                 <WhatsAppIcon size={16} />
                 Cotizar por WhatsApp

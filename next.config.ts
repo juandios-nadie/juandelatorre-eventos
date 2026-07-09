@@ -1,4 +1,8 @@
 import type { NextConfig } from "next";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
+
+const configDir = path.dirname(fileURLToPath(import.meta.url));
 
 const securityHeaders = [
   // Prevents clickjacking — stops your site being embedded in an iframe on another domain
@@ -14,6 +18,9 @@ const securityHeaders = [
 ];
 
 const nextConfig: NextConfig = {
+  turbopack: {
+    root: configDir,
+  },
   images: {
     remotePatterns: [
       {
