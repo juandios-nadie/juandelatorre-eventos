@@ -75,9 +75,11 @@ export default function FacebookPageEmbed({
       <div className="overflow-hidden rounded-[1.5rem] border border-brand-gold/20 bg-white p-3 shadow-[0_24px_80px_rgba(35,31,32,0.08)]">
         {embedStatus === "unavailable" ? (
           <div className="flex min-h-[560px] flex-col items-center justify-center bg-brand-champagne/30 px-6 py-10 text-center">
-            <p className="max-w-sm text-sm font-semibold leading-7 text-brand-charcoal">
-              Facebook no permite mostrar esta actividad dentro del sitio en
-              este momento.
+            <p className="max-w-sm text-sm font-bold uppercase tracking-[0.18em] text-brand-ruby">
+              Actividad en Facebook
+            </p>
+            <p className="mt-4 max-w-sm font-playfair text-3xl font-bold leading-tight text-brand-charcoal">
+              Mira los montajes recientes directo en la página.
             </p>
             <a
               href={pageUrl}
