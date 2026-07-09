@@ -5,6 +5,7 @@ import ServicesSection from "@/components/ServicesSection";
 import EventTypesSection from "@/components/EventTypesSection";
 import ProcessSection from "@/components/ProcessSection";
 import FeaturedGallery from "@/components/FeaturedGallery";
+import FacebookEventsSection from "@/components/FacebookEventsSection";
 import QuoteGuideSection from "@/components/QuoteGuideSection";
 import ContactSection from "@/components/ContactSection";
 import {
@@ -38,6 +39,7 @@ export default async function Home() {
         <EventTypesSection />
         <ProcessSection />
         <FeaturedGallery items={featuredItems} />
+        <FacebookEventsSection facebookUrl={settings?.facebookUrl} />
         <QuoteGuideSection />
         <ContactSection settings={settings} />
       </main>
