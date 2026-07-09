@@ -34,6 +34,29 @@ test("buildQuoteMessage keeps the generic message concise without items", () => 
   );
 });
 
+test("buildQuoteMessage includes quick quote form details", () => {
+  const message = buildQuoteMessage({
+    eventDate: "12 de octubre",
+    guestCount: "80",
+    location: "Colonia Americana",
+    items: ["Sillas Tiffany y mesas redondas"],
+  });
+
+  assert.equal(
+    message,
+    [
+      "Hola, los vi en su página web y me interesa cotizar mobiliario para mi evento.",
+      "",
+      "Artículos:",
+      "- Sillas Tiffany y mesas redondas",
+      "",
+      "Fecha del evento: 12 de octubre",
+      "Invitados aproximados: 80",
+      "Zona del evento: Colonia Americana",
+    ].join("\n")
+  );
+});
+
 test("buildQuoteUrl encodes the message for WhatsApp", () => {
   const url = buildQuoteUrl({
     items: ["Mesa de Novios"],

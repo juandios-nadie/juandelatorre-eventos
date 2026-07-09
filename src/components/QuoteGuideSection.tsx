@@ -1,13 +1,4 @@
-import Link from "next/link";
-import { WHATSAPP_URL } from "@/lib/constants";
-import WhatsAppIcon from "./WhatsAppIcon";
-
-const QUOTE_DETAILS = [
-  "Fecha del evento",
-  "Zona o colonia",
-  "Cantidad aproximada de invitados",
-  "Artículos que te gustaron del catálogo",
-];
+import QuickQuoteForm from "./QuickQuoteForm";
 
 export default function QuoteGuideSection() {
   return (
@@ -26,35 +17,16 @@ export default function QuoteGuideSection() {
           </p>
         </div>
 
-        <div className="flex flex-col justify-between gap-8 rounded-[1.5rem] bg-brand-charcoal p-6 text-white sm:p-8">
-          <div className="grid gap-3 sm:grid-cols-2">
-            {QUOTE_DETAILS.map((detail) => (
-              <div
-                key={detail}
-                className="rounded-2xl border border-white/10 bg-white/[0.06] p-4 text-sm font-semibold text-brand-champagne"
-              >
-                {detail}
-              </div>
-            ))}
-          </div>
-
-          <div className="flex flex-col gap-3 sm:flex-row">
-            <Link
-              href="/catalogo"
-              className="inline-flex items-center justify-center rounded-full bg-brand-gold px-6 py-3.5 text-sm font-bold text-white transition hover:bg-brand-gold/88 focus:outline-none focus:ring-2 focus:ring-brand-gold focus:ring-offset-2 focus:ring-offset-brand-charcoal active:translate-y-px"
-            >
-              Armar cotización
-            </Link>
-            <a
-              href={WHATSAPP_URL}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center justify-center gap-2 rounded-full border border-white/16 bg-white/10 px-6 py-3.5 text-sm font-bold text-white transition hover:bg-white/16 focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-brand-charcoal active:translate-y-px"
-            >
-              <WhatsAppIcon size={17} />
-              WhatsApp directo
-            </a>
-          </div>
+        <div className="rounded-[1.5rem] bg-brand-charcoal p-6 text-white sm:p-8">
+          <QuickQuoteForm
+            submitLabel="Enviar por WhatsApp"
+            secondaryAction={{
+              href: "/catalogo",
+              label: "Armar cotización",
+              placement: "before",
+              variant: "gold",
+            }}
+          />
         </div>
       </div>
     </section>
