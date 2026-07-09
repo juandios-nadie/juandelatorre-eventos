@@ -30,7 +30,7 @@ export default function FacebookPageEmbed({
   }
 
   return (
-    <>
+    <div className="w-full min-w-0">
       <div id="fb-root" />
       <div className="overflow-hidden rounded-[1.5rem] border border-brand-gold/20 bg-white p-3 shadow-[0_24px_80px_rgba(35,31,32,0.08)]">
         {scriptFailed && (
@@ -64,6 +64,6 @@ export default function FacebookPageEmbed({
         onReady={parseFacebookMarkup}
         onError={() => setScriptFailed(true)}
       />
-    </>
+    </div>
   );
 }
