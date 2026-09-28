@@ -42,7 +42,6 @@ export default function ServicesSection({ categories }: ServicesSectionProps) {
           <SectionReveal>
             <Link
               href={`/catalogo?categoria=${featured.slug}`}
-              aria-label={`Explorar ${featured.name}`}
               className="group block focus:outline-none"
             >
               <div className="media-surface relative aspect-[4/3] bg-brand-charcoal">
@@ -59,7 +58,7 @@ export default function ServicesSection({ categories }: ServicesSectionProps) {
                   <p className="text-2xl font-extrabold tracking-[-0.035em] text-brand-charcoal sm:text-3xl">
                     {featured.name}
                   </p>
-                  <p className="mt-2 max-w-lg text-sm leading-6 text-brand-charcoal/58">
+                  <p className="mt-2 max-w-lg text-sm leading-6 text-brand-charcoal/64">
                     {CATEGORY_COPY[featured.slug]}
                   </p>
                 </div>
@@ -75,10 +74,9 @@ export default function ServicesSection({ categories }: ServicesSectionProps) {
               <Link
                 key={cat._id}
                 href={`/catalogo?categoria=${cat.slug}`}
-                aria-label={`Explorar ${cat.name}`}
                 className="group grid min-h-24 grid-cols-[2.5rem_1fr_auto] items-center gap-3 border-b border-brand-charcoal/18 py-4 focus:outline-none focus-visible:bg-white/55 sm:grid-cols-[3rem_0.8fr_1.2fr_auto] sm:gap-5"
               >
-                <span className="text-xs font-bold tabular-nums text-brand-gold">
+                <span className="text-xs font-bold tabular-nums text-brand-gold-ink">
                   {String(index + 2).padStart(2, "0")}
                 </span>
                 <span className="text-lg font-extrabold tracking-[-0.025em] text-brand-charcoal sm:text-xl">

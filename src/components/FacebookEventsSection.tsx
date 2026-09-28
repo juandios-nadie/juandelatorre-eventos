@@ -15,8 +15,8 @@ export default function FacebookEventsSection({
     <section className="overflow-hidden bg-white py-24 sm:py-32">
       <div className="section-shell grid gap-12 lg:grid-cols-[0.82fr_1.18fr] lg:items-center lg:gap-20">
         <SectionReveal>
-          <div className="flex items-center gap-3 text-xs font-extrabold uppercase tracking-[0.14em] text-brand-gold">
-            <span className="h-2 w-2 rounded-full bg-brand-gold" aria-hidden="true" />
+          <div className="flex items-center gap-3 text-xs font-extrabold uppercase tracking-[0.14em] text-brand-gold-ink">
+            <span className="h-2 w-2 rounded-full bg-brand-gold-ink" aria-hidden="true" />
             Actividad reciente
           </div>
           <h2 className="display-type mt-5 max-w-xl text-4xl leading-[0.98] text-brand-charcoal sm:text-6xl">

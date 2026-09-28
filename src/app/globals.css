@@ -7,6 +7,7 @@
   --muted: #67655f;
   --line: #d6d1c7;
   --accent: #c3a25d;
+  --accent-ink: #72571f;
   --brand-gold: var(--accent);
   --brand-ruby: var(--accent);
   --brand-champagne: var(--line);
@@ -16,6 +17,7 @@
 
 @theme inline {
   --color-brand-gold: var(--brand-gold);
+  --color-brand-gold-ink: var(--accent-ink);
   --color-brand-ruby: var(--brand-ruby);
   --color-brand-champagne: var(--brand-champagne);
   --color-brand-warm-white: var(--brand-warm-white);
@@ -77,11 +79,15 @@ select {
 }
 
 .editorial-kicker {
-  color: var(--accent);
+  color: var(--accent-ink);
   font-size: 0.75rem;
   font-weight: 800;
   letter-spacing: 0.12em;
   text-transform: uppercase;
+}
+
+.bg-brand-charcoal .editorial-kicker {
+  color: var(--accent);
 }
 
 .media-surface {

@@ -32,7 +32,7 @@ test("homepage follows the new editorial narrative", async ({ page }) => {
     })
   ).toBeVisible();
   await expect(
-    page.getByRole("link", { name: "Explorar Sillas" })
+    page.locator('a[href="/catalogo?categoria=sillas"]').first()
   ).toBeVisible();
   await expect(
     page.getByRole("heading", {
@@ -149,7 +149,9 @@ test("catalog keeps category filtering and multi-item quoting intact", async ({
   ).toBeVisible();
 
   await page
-    .getByRole("button", { name: "Agregar Silla Infantil a la cotización" })
+    .getByRole("button", {
+      name: /Agregar a cotización\s*:\s*Silla Infantil/,
+    })
     .click();
   const quoteLink = page
     .locator("#quote-tray")

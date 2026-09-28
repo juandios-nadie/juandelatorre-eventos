@@ -3,7 +3,6 @@ import Link from "next/link";
 import type { SiteSettings } from "@/lib/sanity";
 import { urlFor } from "@/lib/sanity";
 import WhatsAppIcon from "./WhatsAppIcon";
-import SectionReveal from "./SectionReveal";
 
 interface HeroSectionProps {
   settings: SiteSettings | null;
@@ -32,7 +31,7 @@ export default function HeroSection({ settings }: HeroSectionProps) {
       <div className="absolute inset-0 bg-[linear-gradient(0deg,rgba(20,20,17,0.86)_0%,transparent_56%)]" />
 
       <div className="section-shell relative z-10 flex min-h-[100dvh] items-end pb-12 pt-28 sm:pb-16 lg:pb-20">
-        <SectionReveal className="w-full max-w-4xl" delay={0.08} y={22}>
+        <div className="w-full max-w-4xl">
           <div className="mb-5 flex items-center gap-3 text-[0.7rem] font-extrabold uppercase tracking-[0.14em] text-brand-gold">
             <span>Juan de la Torre Eventos</span>
             <span className="h-px w-10 bg-brand-gold/60" aria-hidden="true" />
@@ -61,7 +60,7 @@ export default function HeroSection({ settings }: HeroSectionProps) {
               Ver catálogo
             </Link>
           </div>
-        </SectionReveal>
+        </div>
 
         <p className="absolute bottom-5 right-0 hidden max-w-[18rem] text-right text-xs font-semibold leading-5 text-white/42 lg:block">
           Montajes reales, inventario propio y atención directa para eventos en

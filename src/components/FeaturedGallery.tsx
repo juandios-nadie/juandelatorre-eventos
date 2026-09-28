@@ -59,7 +59,7 @@ export default function FeaturedGallery({ items }: FeaturedGalleryProps) {
                     className="object-cover transition duration-700 hover:scale-[1.025] motion-reduce:transform-none motion-reduce:transition-none"
                   />
                 </div>
-                <figcaption className="pt-3 text-xs font-bold uppercase tracking-[0.1em] text-brand-charcoal/54">
+                <figcaption className="pt-3 text-xs font-bold uppercase tracking-[0.1em] text-brand-charcoal/68">
                   {photo.label}
                 </figcaption>
               </figure>

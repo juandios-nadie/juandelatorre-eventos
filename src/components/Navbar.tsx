@@ -33,7 +33,6 @@ export default function Navbar({
       <nav className="section-shell flex h-[4.5rem] items-center justify-between">
         <Link
           href="/"
-          aria-label="Ir al inicio de Juan de la Torre Eventos"
           className="group flex min-h-11 items-center gap-3 leading-none focus:outline-none"
         >
           <Image
@@ -47,7 +46,7 @@ export default function Navbar({
             <span className="text-[0.72rem] font-extrabold tracking-[-0.02em] text-white transition-colors group-hover:text-brand-gold sm:text-sm">
               Juan de la Torre
             </span>
-            <span className="mt-0.5 text-[8px] font-bold uppercase tracking-[0.28em] text-white/50 transition-colors group-hover:text-white/72 sm:text-[9px]">
+            <span className="mt-0.5 text-[8px] font-bold uppercase tracking-[0.28em] text-white/64 transition-colors group-hover:text-white/82 sm:text-[9px]">
               Eventos
             </span>
           </span>

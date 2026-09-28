@@ -26,7 +26,7 @@ export default function TrustBar() {
             key={item.label}
             className="relative border-b border-white/10 py-6 sm:px-6 sm:odd:border-r lg:border-b-0 lg:border-r lg:px-7 lg:first:pl-0 lg:last:border-r-0 lg:last:pr-0"
           >
-            <span className="mb-8 block text-xs font-bold tabular-nums text-brand-gold/70">
+            <span className="mb-8 block text-xs font-bold tabular-nums text-brand-gold">
               {String(index + 1).padStart(2, "0")}
             </span>
             <p className="text-base font-extrabold tracking-[-0.025em] text-white">

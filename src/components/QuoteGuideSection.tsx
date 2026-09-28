@@ -23,7 +23,7 @@ export default function QuoteGuideSection() {
                 key={step}
                 className="grid grid-cols-[3rem_1fr] items-center border-b border-brand-charcoal/18 py-4 text-sm font-extrabold text-brand-charcoal"
               >
-                <span className="text-xs tabular-nums text-brand-gold">
+                <span className="text-xs tabular-nums text-brand-gold-ink">
                   {String(index + 1).padStart(2, "0")}
                 </span>
                 {step}

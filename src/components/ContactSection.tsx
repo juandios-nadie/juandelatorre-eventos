@@ -62,7 +62,7 @@ export default function ContactSection({ settings }: ContactSectionProps) {
           </div>
         </SectionReveal>
 
-        <div className="mt-20 flex flex-col gap-3 border-t border-white/12 pt-6 text-xs text-white/38 sm:flex-row sm:items-center sm:justify-between">
+        <div className="mt-20 flex flex-col gap-3 border-t border-white/12 pt-6 text-xs text-white/62 sm:flex-row sm:items-center sm:justify-between">
           <p>© {new Date().getFullYear()} Juan de la Torre Eventos.</p>
           <p>Guadalajara, Jalisco.</p>
         </div>

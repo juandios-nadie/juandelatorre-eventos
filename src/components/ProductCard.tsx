@@ -98,11 +98,11 @@ export default function ProductCard({
 
       <div className="flex flex-1 flex-col p-5 sm:p-6">
         <div className="min-h-[4.6rem]">
-          <p className="mb-3 text-[10px] font-extrabold uppercase tracking-[0.14em] text-brand-gold">
+          <p className="mb-3 text-[10px] font-extrabold uppercase tracking-[0.14em] text-brand-gold-ink">
             {item.category?.name}
           </p>
           {cue && (
-            <p className="mb-2 text-xs font-bold text-brand-charcoal/46">
+            <p className="mb-2 text-xs font-bold text-brand-charcoal/68">
               {cue}
             </p>
           )}
@@ -123,9 +123,9 @@ export default function ProductCard({
               onClick={onToggle}
               className="inline-flex min-h-12 items-center justify-center rounded-full bg-brand-charcoal px-4 py-3 text-sm font-extrabold text-white transition hover:bg-brand-gold hover:text-brand-charcoal focus:outline-none focus:ring-2 focus:ring-brand-gold focus:ring-offset-2 active:scale-[0.98]"
               aria-pressed={selected}
-              aria-label={`Agregar ${item.name} a la cotización`}
             >
               Agregar a cotización
+              <span className="sr-only">: {item.name}</span>
             </button>
           )}
 
@@ -134,17 +134,17 @@ export default function ProductCard({
               <a
                 href={quoteTrayHref}
                 className="inline-flex min-h-12 items-center justify-center rounded-full bg-brand-gold px-4 py-3 text-sm font-extrabold text-brand-charcoal transition hover:bg-brand-charcoal hover:text-white focus:outline-none focus:ring-2 focus:ring-brand-gold focus:ring-offset-2 active:scale-[0.98]"
-                aria-label={`Ver cotización con ${item.name}`}
               >
                 Ver cotización
+                <span className="sr-only"> con {item.name}</span>
               </a>
               <button
                 type="button"
                 onClick={onToggle}
                 className="inline-flex min-h-12 items-center justify-center rounded-full border border-brand-charcoal/16 px-4 py-3 text-sm font-extrabold text-brand-charcoal/64 transition hover:border-brand-charcoal hover:text-brand-charcoal focus:outline-none focus:ring-2 focus:ring-brand-gold focus:ring-offset-2 active:scale-[0.98]"
-                aria-label={`Quitar ${item.name} de la cotización`}
               >
                 Quitar
+                <span className="sr-only"> {item.name} de la cotización</span>
               </button>
             </div>
           )}
@@ -154,11 +154,11 @@ export default function ProductCard({
               href={whatsappItemUrl(item.name)}
               target="_blank"
               rel="noopener noreferrer"
-              aria-label={`Cotizar solo este artículo: ${item.name}`}
               className="inline-flex min-h-12 items-center justify-center gap-2 rounded-full border border-brand-charcoal/16 px-4 py-3 text-sm font-extrabold text-brand-charcoal transition hover:border-brand-charcoal focus:outline-none focus:ring-2 focus:ring-brand-gold focus:ring-offset-2 active:scale-[0.98]"
             >
               <WhatsAppIcon size={14} />
               Cotizar solo este
+              <span className="sr-only"> artículo: {item.name}</span>
             </a>
           )}
         </div>

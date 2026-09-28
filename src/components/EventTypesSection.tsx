@@ -53,12 +53,12 @@ export default function EventTypesSection() {
                 />
               </div>
               <div className="mt-6 grid gap-3 border-b border-brand-charcoal/18 pb-6 sm:grid-cols-[3rem_1fr]">
-                <span className="text-xs font-bold tabular-nums text-brand-gold">01</span>
+                <span className="text-xs font-bold tabular-nums text-brand-gold-ink">01</span>
                 <div>
                   <h3 className="text-2xl font-extrabold tracking-[-0.035em] text-brand-charcoal">
                     {featured.title}
                   </h3>
-                  <p className="mt-3 max-w-xl text-sm leading-7 text-brand-charcoal/58">
+                  <p className="mt-3 max-w-xl text-sm leading-7 text-brand-charcoal/64">
                     {featured.body}
                   </p>
                 </div>
@@ -80,13 +80,13 @@ export default function EventTypesSection() {
                     />
                   </div>
                   <div>
-                    <span className="text-xs font-bold tabular-nums text-brand-gold">
+                    <span className="text-xs font-bold tabular-nums text-brand-gold-ink">
                       {String(index + 2).padStart(2, "0")}
                     </span>
                     <h3 className="mt-3 text-xl font-extrabold tracking-[-0.03em] text-brand-charcoal">
                       {event.title}
                     </h3>
-                    <p className="mt-2 text-sm leading-6 text-brand-charcoal/58">
+                    <p className="mt-2 text-sm leading-6 text-brand-charcoal/64">
                       {event.body}
                     </p>
                   </div>

@@ -262,7 +262,7 @@ function CategoryRail({
       className="sticky top-[4.5rem] z-20 -mx-4 border-b border-brand-charcoal/14 bg-brand-warm-white/95 px-4 py-4 backdrop-blur-xl sm:mx-0 sm:px-0"
       aria-label="Categorías del catálogo"
     >
-      <div className="mb-3 flex items-center justify-between text-xs font-bold uppercase tracking-[0.1em] text-brand-charcoal/46 lg:hidden">
+      <div className="mb-3 flex items-center justify-between text-xs font-bold uppercase tracking-[0.1em] text-brand-charcoal/68 lg:hidden">
         <span>Categorías</span>
         <span>Desliza</span>
       </div>
@@ -316,7 +316,7 @@ function CategoryButton({
       <span className="text-sm font-extrabold leading-tight">{name}</span>
       <span
         className={`text-xs font-bold tabular-nums ${
-          active ? "text-brand-gold" : "text-brand-charcoal/38"
+          active ? "text-brand-gold" : "text-brand-charcoal/68"
         }`}
       >
         {count}
@@ -335,7 +335,7 @@ function CatalogStatus({
   itemCount: number;
 }) {
   return (
-    <div className="mt-6 flex flex-col gap-2 border-b border-brand-charcoal/14 pb-6 text-sm text-brand-charcoal/54 sm:flex-row sm:items-center sm:justify-between">
+    <div className="mt-6 flex flex-col gap-2 border-b border-brand-charcoal/14 pb-6 text-sm text-brand-charcoal/68 sm:flex-row sm:items-center sm:justify-between">
       <p>
         {showingAll
           ? `Mostrando todo el catálogo por familia: ${itemCount} piezas.`
@@ -369,7 +369,7 @@ function ShowroomSection({
     <section>
       <div className="mb-7 grid gap-4 border-b border-brand-charcoal/16 pb-6 lg:grid-cols-[0.72fr_1fr_auto] lg:items-end">
         <div>
-          <p className="text-xs font-extrabold uppercase tracking-[0.14em] text-brand-gold">
+          <p className="text-xs font-extrabold uppercase tracking-[0.14em] text-brand-gold-ink">
             {section.items.length} {section.items.length === 1 ? "pieza" : "piezas"}
           </p>
           <h2 className="display-type mt-2 text-3xl text-brand-charcoal sm:text-5xl">
@@ -383,10 +383,10 @@ function ShowroomSection({
           <button
             type="button"
             onClick={onViewCategory}
-            aria-label={`Ver solo ${section.category.name}`}
             className="inline-flex min-h-11 items-center justify-center rounded-full border border-brand-charcoal/18 px-5 py-2.5 text-sm font-extrabold text-brand-charcoal transition hover:border-brand-charcoal hover:bg-brand-charcoal hover:text-white focus:outline-none focus:ring-2 focus:ring-brand-gold focus:ring-offset-2 focus:ring-offset-brand-warm-white"
           >
             Ver solo esta familia
+            <span className="sr-only">: {section.category.name}</span>
           </button>
         )}
       </div>

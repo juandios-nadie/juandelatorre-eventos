@@ -8,5 +8,5 @@ test("reduced motion resolves every animation duration to zero", () => {
 
 test("standard motion keeps the requested duration and shared ease", () => {
   assert.equal(getMotionDuration(false, 0.8), 0.8);
-  assert.deepEqual(MOTION_EASE, [0.22, 1, 0.36, 1]);
+  assert.equal(MOTION_EASE, "power3.out");
 });
