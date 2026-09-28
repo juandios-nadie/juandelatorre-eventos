@@ -1,11 +1,17 @@
 @import "tailwindcss";
 
 :root {
-  --brand-gold: #B8842F;
-  --brand-ruby: #7F1D1D;
-  --brand-champagne: #EFE1BD;
-  --brand-warm-white: #F7F3EA;
-  --brand-charcoal: #181615;
+  --surface: #f2f0eb;
+  --surface-raised: #faf9f6;
+  --ink: #141411;
+  --muted: #67655f;
+  --line: #d6d1c7;
+  --accent: #c3a25d;
+  --brand-gold: var(--accent);
+  --brand-ruby: var(--accent);
+  --brand-champagne: var(--line);
+  --brand-warm-white: var(--surface);
+  --brand-charcoal: var(--ink);
 }
 
 @theme inline {
@@ -15,27 +21,97 @@
   --color-brand-warm-white: var(--brand-warm-white);
   --color-brand-charcoal: var(--brand-charcoal);
 
-  --font-playfair: var(--font-playfair-display);
+  --font-playfair: var(--font-manrope);
   --font-sans: var(--font-manrope);
 }
 
-body {
-  background: var(--brand-warm-white);
-  color: var(--brand-charcoal);
-  font-family: var(--font-manrope), system-ui, sans-serif;
+* {
+  box-sizing: border-box;
 }
 
 html {
-  scroll-padding-top: 7rem;
+  background: var(--surface);
+  scroll-padding-top: 5.5rem;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  html {
-    scroll-behavior: smooth;
-  }
+body {
+  min-width: 320px;
+  overflow-x: clip;
+  background: var(--surface);
+  color: var(--ink);
+  font-family: var(--font-manrope), system-ui, sans-serif;
+  text-rendering: optimizeLegibility;
+}
+
+a {
+  text-underline-offset: 0.18em;
+}
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 4px;
 }
 
 ::selection {
-  background: var(--brand-gold);
-  color: white;
+  background: var(--accent);
+  color: var(--ink);
+}
+
+.display-type {
+  font-family: var(--font-manrope), system-ui, sans-serif;
+  font-weight: 760;
+  letter-spacing: -0.055em;
+  text-wrap: balance;
+}
+
+.section-shell {
+  width: min(100% - 2rem, 80rem);
+  margin-inline: auto;
+}
+
+.editorial-kicker {
+  color: var(--accent);
+  font-size: 0.75rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.media-surface {
+  border-radius: 1.125rem;
+  overflow: hidden;
+}
+
+@media (min-width: 640px) {
+  .section-shell {
+    width: min(100% - 3rem, 80rem);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+@media (prefers-reduced-transparency: reduce) {
+  [class*="backdrop-blur"] {
+    backdrop-filter: none !important;
+  }
 }
