@@ -27,11 +27,11 @@ export default async function CatalogPage() {
   return (
     <>
       <Navbar />
-      <main className="min-h-screen bg-brand-warm-white pt-16">
+      <main className="min-h-screen bg-brand-warm-white pt-[4.5rem]">
         <Suspense
           fallback={
-            <div className="flex items-center justify-center h-64 text-brand-charcoal/40">
-              Cargando catálogo…
+            <div className="flex h-64 items-center justify-center text-brand-charcoal/40">
+              Cargando catálogo...
             </div>
           }
         >

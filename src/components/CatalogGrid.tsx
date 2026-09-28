@@ -124,7 +124,7 @@ export default function CatalogGrid({ categories, items }: CatalogGridProps) {
   }
 
   return (
-    <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8 lg:py-14">
+    <div className="section-shell py-8 sm:py-12 lg:py-16">
       <CatalogHero stats={stats} />
 
       <CategoryRail
@@ -146,7 +146,7 @@ export default function CatalogGrid({ categories, items }: CatalogGridProps) {
 
       <div
         id="catalog-items"
-        className={`mt-8 grid gap-8 ${
+        className={`mt-12 grid gap-10 ${
           selectedNames.length > 0
             ? "pb-28 lg:grid-cols-[minmax(0,1fr)_390px] lg:pb-0"
             : ""
@@ -198,22 +198,21 @@ function CatalogHero({
   stats: { itemCount: number; categoryCount: number };
 }) {
   return (
-    <section className="overflow-hidden rounded-[2rem] border border-brand-champagne bg-brand-charcoal text-white shadow-[0_24px_80px_rgba(24,22,21,0.16)]">
-      <div className="grid gap-6 p-5 sm:gap-8 sm:p-8 lg:grid-cols-[1fr_0.72fr] lg:p-10">
-        <div className="max-w-3xl">
-          <p className="text-sm font-bold text-brand-gold">Showroom de renta</p>
-          <h1 className="mt-3 font-playfair text-[2.35rem] font-bold leading-[0.95] sm:text-6xl">
-            Elige piezas, arma tu lista y manda una cotización clara.
+    <section className="overflow-hidden rounded-2xl bg-brand-charcoal text-white">
+      <div className="grid gap-12 p-6 sm:p-10 lg:grid-cols-[1fr_0.55fr] lg:p-14">
+        <div className="max-w-4xl">
+          <p className="editorial-kicker">Inventario para renta</p>
+          <h1 className="display-type mt-5 text-[clamp(2.65rem,6vw,5.5rem)] leading-[0.94]">
+            Elige las piezas. Nosotros coordinamos el resto.
           </h1>
-          <p className="mt-4 max-w-2xl text-sm leading-7 text-white/76 sm:mt-5 sm:text-base sm:leading-8">
-            Este catálogo está pensado para decidir rápido: revisa por familia,
-            agrega lo que te interesa y llega a WhatsApp con la información
-            ordenada.
+          <p className="mt-6 max-w-2xl text-base leading-8 text-white/58">
+            Revisa por familia, agrega lo que te interesa y abre WhatsApp con
+            una lista clara. Sin formularios largos y sin perder tu selección.
           </p>
-          <div className="mt-6 flex flex-col gap-3 sm:mt-7 sm:flex-row">
+          <div className="mt-8 flex flex-col gap-3 sm:flex-row">
             <a
               href="#catalog-items"
-              className="inline-flex items-center justify-center rounded-full bg-brand-gold px-6 py-3.5 text-sm font-bold text-brand-charcoal transition hover:bg-brand-champagne focus:outline-none focus:ring-2 focus:ring-brand-gold focus:ring-offset-2 focus:ring-offset-brand-charcoal active:translate-y-px"
+              className="inline-flex min-h-12 items-center justify-center rounded-full bg-brand-gold px-6 py-3 text-sm font-extrabold text-brand-charcoal transition hover:bg-white focus:outline-none focus:ring-2 focus:ring-brand-gold focus:ring-offset-2 focus:ring-offset-brand-charcoal active:scale-[0.98]"
             >
               Explorar catálogo
             </a>
@@ -221,14 +220,14 @@ function CatalogHero({
               href={WHATSAPP_URL}
               target="_blank"
               rel="noopener noreferrer"
-              className="hidden items-center justify-center rounded-full border border-white/16 bg-white/10 px-6 py-3.5 text-sm font-bold text-white transition hover:bg-white/16 focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-brand-charcoal active:translate-y-px sm:inline-flex"
+              className="hidden min-h-12 items-center justify-center rounded-full border border-white/18 px-6 py-3 text-sm font-extrabold text-white transition hover:bg-white hover:text-brand-charcoal focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-brand-charcoal active:scale-[0.98] sm:inline-flex"
             >
               WhatsApp directo
             </a>
           </div>
         </div>
 
-        <div className="hidden content-end gap-3 sm:grid sm:grid-cols-3 lg:grid-cols-1">
+        <div className="hidden content-end border-t border-white/16 sm:grid sm:grid-cols-3 lg:grid-cols-1">
           <HeroStat value={`${stats.itemCount}`} label="artículos visibles" />
           <HeroStat value={`${stats.categoryCount}`} label="familias de renta" />
           <HeroStat value="1" label="mensaje para cotizar" />
@@ -240,11 +239,9 @@ function CatalogHero({
 
 function HeroStat({ value, label }: { value: string; label: string }) {
   return (
-    <div className="rounded-2xl border border-white/10 bg-white/[0.06] px-5 py-4">
-      <p className="font-playfair text-3xl font-bold text-brand-gold">
-        {value}
-      </p>
-      <p className="mt-1 text-sm font-semibold text-white/78">{label}</p>
+    <div className="border-b border-white/16 py-5 sm:border-b-0 sm:border-r sm:px-5 sm:first:pl-0 sm:last:border-r-0 lg:border-b lg:border-r-0 lg:px-0 lg:first:pt-0">
+      <p className="text-4xl font-extrabold tracking-[-0.055em] text-brand-gold">{value}</p>
+      <p className="mt-1 text-xs font-bold uppercase tracking-[0.1em] text-white/46">{label}</p>
     </div>
   );
 }
@@ -262,15 +259,15 @@ function CategoryRail({
 }) {
   return (
     <section
-      className="sticky top-16 z-20 -mx-4 border-b border-brand-champagne/70 bg-brand-warm-white/95 px-4 py-3 backdrop-blur-sm sm:mx-0 sm:px-0"
+      className="sticky top-[4.5rem] z-20 -mx-4 border-b border-brand-charcoal/14 bg-brand-warm-white/95 px-4 py-4 backdrop-blur-xl sm:mx-0 sm:px-0"
       aria-label="Categorías del catálogo"
     >
-      <div className="mb-2 flex items-center justify-between text-xs font-bold text-brand-charcoal/58 lg:hidden">
+      <div className="mb-3 flex items-center justify-between text-xs font-bold uppercase tracking-[0.1em] text-brand-charcoal/46 lg:hidden">
         <span>Categorías</span>
         <span>Desliza</span>
       </div>
       <div
-        className="flex snap-x gap-3 overflow-x-auto pb-1 lg:grid lg:grid-cols-4 lg:overflow-visible xl:grid-cols-8 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]"
+        className="flex snap-x gap-2 overflow-x-auto pb-1 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]"
         role="group"
         aria-label="Filtrar artículos por categoría"
       >
@@ -310,19 +307,19 @@ function CategoryButton({
       type="button"
       onClick={onClick}
       aria-pressed={active}
-      className={`grid min-w-[9rem] shrink-0 snap-start gap-1 rounded-2xl border px-4 py-3 text-left transition focus:outline-none focus:ring-2 focus:ring-brand-gold focus:ring-offset-2 focus:ring-offset-brand-warm-white lg:min-w-0 ${
+      className={`flex min-h-11 shrink-0 snap-start items-center gap-2 rounded-full border px-4 py-2 text-left transition focus:outline-none focus:ring-2 focus:ring-brand-gold focus:ring-offset-2 focus:ring-offset-brand-warm-white ${
         active
-          ? "border-brand-ruby bg-brand-ruby text-white shadow-sm"
-          : "border-brand-champagne bg-white text-brand-charcoal hover:border-brand-gold"
+          ? "border-brand-charcoal bg-brand-charcoal text-white"
+          : "border-brand-charcoal/16 bg-transparent text-brand-charcoal hover:border-brand-gold"
       }`}
     >
-      <span className="text-sm font-bold leading-tight">{name}</span>
+      <span className="text-sm font-extrabold leading-tight">{name}</span>
       <span
-        className={`text-xs font-semibold ${
-          active ? "text-white/70" : "text-brand-charcoal/48"
+        className={`text-xs font-bold tabular-nums ${
+          active ? "text-brand-gold" : "text-brand-charcoal/38"
         }`}
       >
-        {count} {count === 1 ? "pieza" : "piezas"}
+        {count}
       </span>
     </button>
   );
@@ -338,7 +335,7 @@ function CatalogStatus({
   itemCount: number;
 }) {
   return (
-    <div className="mt-5 flex flex-col gap-2 text-sm text-brand-charcoal/62 sm:flex-row sm:items-center sm:justify-between">
+    <div className="mt-6 flex flex-col gap-2 border-b border-brand-charcoal/14 pb-6 text-sm text-brand-charcoal/54 sm:flex-row sm:items-center sm:justify-between">
       <p>
         {showingAll
           ? `Mostrando todo el catálogo por familia: ${itemCount} piezas.`
@@ -346,7 +343,7 @@ function CatalogStatus({
               activeSection?.category.name ?? "esta categoría"
             }.`}
       </p>
-      <p className="font-semibold text-brand-charcoal/72">
+      <p className="font-bold text-brand-charcoal/68">
         Agrega varias piezas y envía una sola cotización.
       </p>
     </div>
@@ -370,12 +367,12 @@ function ShowroomSection({
 
   return (
     <section>
-      <div className="mb-6 grid gap-4 border-b border-brand-champagne pb-5 lg:grid-cols-[0.72fr_1fr_auto] lg:items-end">
+      <div className="mb-7 grid gap-4 border-b border-brand-charcoal/16 pb-6 lg:grid-cols-[0.72fr_1fr_auto] lg:items-end">
         <div>
-          <p className="text-xs font-bold uppercase tracking-[0.18em] text-brand-ruby">
+          <p className="text-xs font-extrabold uppercase tracking-[0.14em] text-brand-gold">
             {section.items.length} {section.items.length === 1 ? "pieza" : "piezas"}
           </p>
-          <h2 className="mt-2 font-playfair text-3xl font-bold text-brand-charcoal sm:text-4xl">
+          <h2 className="display-type mt-2 text-3xl text-brand-charcoal sm:text-5xl">
             {section.category.name}
           </h2>
         </div>
@@ -387,14 +384,14 @@ function ShowroomSection({
             type="button"
             onClick={onViewCategory}
             aria-label={`Ver solo ${section.category.name}`}
-            className="inline-flex items-center justify-center rounded-full border border-brand-champagne bg-white px-5 py-3 text-sm font-bold text-brand-charcoal transition hover:border-brand-ruby hover:text-brand-ruby focus:outline-none focus:ring-2 focus:ring-brand-ruby focus:ring-offset-2 focus:ring-offset-brand-warm-white"
+            className="inline-flex min-h-11 items-center justify-center rounded-full border border-brand-charcoal/18 px-5 py-2.5 text-sm font-extrabold text-brand-charcoal transition hover:border-brand-charcoal hover:bg-brand-charcoal hover:text-white focus:outline-none focus:ring-2 focus:ring-brand-gold focus:ring-offset-2 focus:ring-offset-brand-warm-white"
           >
             Ver solo esta familia
           </button>
         )}
       </div>
 
-      <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 xl:grid-cols-3">
+      <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-3">
         {children}
       </div>
     </section>
@@ -419,11 +416,11 @@ function QuoteTray({
   return (
     <aside
       id="quote-tray"
-      className="order-1 scroll-mt-24 rounded-[2rem] border border-brand-champagne bg-white p-5 shadow-[0_22px_70px_rgba(24,22,21,0.12)] lg:sticky lg:top-28 lg:order-2 lg:self-start"
+      className="order-1 scroll-mt-24 rounded-2xl bg-brand-charcoal p-6 text-white shadow-[0_22px_70px_rgba(20,20,17,0.16)] lg:sticky lg:top-32 lg:order-2 lg:self-start"
     >
-      <div className="rounded-[1.5rem] bg-brand-charcoal p-5 text-white">
-        <p className="text-sm font-bold text-brand-gold">Tu lista</p>
-        <h2 className="mt-2 font-playfair text-2xl font-bold">
+      <div className="border-b border-white/14 pb-5">
+        <p className="text-xs font-extrabold uppercase tracking-[0.12em] text-brand-gold">Tu lista</p>
+        <h2 className="mt-3 text-2xl font-extrabold tracking-[-0.035em]">
           {selectedNames.length} artículo
           {selectedNames.length === 1 ? "" : "s"} para cotizar
         </h2>
@@ -433,7 +430,7 @@ function QuoteTray({
               type="button"
               key={name}
               onClick={() => onRemove(name)}
-              className="rounded-full border border-white/10 bg-white/[0.08] px-3 py-1.5 text-xs font-bold text-white/84 transition hover:border-brand-gold hover:text-brand-champagne"
+              className="min-h-9 rounded-full border border-white/16 px-3 py-1.5 text-xs font-bold text-white/72 transition hover:border-brand-gold hover:text-white"
               aria-label={`Quitar ${name}`}
             >
               {name} x
@@ -471,7 +468,7 @@ function QuoteTray({
           href={quoteUrl}
           target="_blank"
           rel="noopener noreferrer"
-          className="inline-flex items-center justify-center gap-2 rounded-full bg-brand-ruby px-5 py-3.5 text-sm font-bold text-white transition hover:bg-brand-ruby/90 focus:outline-none focus:ring-2 focus:ring-brand-ruby focus:ring-offset-2 active:translate-y-px"
+          className="inline-flex min-h-12 items-center justify-center gap-2 rounded-full bg-brand-gold px-5 py-3 text-sm font-extrabold text-brand-charcoal transition hover:bg-white focus:outline-none focus:ring-2 focus:ring-brand-gold focus:ring-offset-2 focus:ring-offset-brand-charcoal active:scale-[0.98]"
         >
           <WhatsAppIcon size={17} />
           Cotizar por WhatsApp
@@ -479,7 +476,7 @@ function QuoteTray({
         <button
           type="button"
           onClick={onClear}
-          className="inline-flex items-center justify-center rounded-full border border-brand-champagne px-5 py-3 text-sm font-bold text-brand-charcoal transition hover:border-brand-ruby hover:text-brand-ruby"
+          className="inline-flex min-h-12 items-center justify-center rounded-full border border-white/16 px-5 py-3 text-sm font-extrabold text-white transition hover:bg-white hover:text-brand-charcoal"
         >
           Limpiar selección
         </button>
@@ -505,7 +502,7 @@ function MobileQuoteBar({
       } seleccionado${
         selectedCount === 1 ? "" : "s"
       }. Cotizar por WhatsApp.`}
-      className="fixed inset-x-4 bottom-[calc(1rem+env(safe-area-inset-bottom))] z-40 flex items-center justify-between rounded-full border border-white/16 bg-brand-charcoal px-5 py-3 text-sm font-bold text-white shadow-[0_18px_50px_rgba(24,22,21,0.28)] focus:outline-none focus:ring-2 focus:ring-brand-gold focus:ring-offset-2 focus:ring-offset-brand-warm-white lg:hidden"
+      className="fixed inset-x-4 bottom-[calc(1rem+env(safe-area-inset-bottom))] z-40 flex min-h-14 items-center justify-between rounded-full border border-white/16 bg-brand-charcoal px-5 py-3 text-sm font-extrabold text-white shadow-[0_18px_50px_rgba(24,22,21,0.28)] focus:outline-none focus:ring-2 focus:ring-brand-gold focus:ring-offset-2 focus:ring-offset-brand-warm-white lg:hidden"
     >
       <span>
         {selectedCount} seleccionado{selectedCount === 1 ? "" : "s"}
@@ -531,14 +528,14 @@ function InputField({
   const id = `quote-${label.toLowerCase().replace(/\s+/g, "-")}`;
 
   return (
-    <label htmlFor={id} className="grid gap-1.5">
-      <span className="text-xs font-bold text-brand-charcoal/58">{label}</span>
+    <label htmlFor={id} className="grid gap-1.5 border-b border-white/14 py-2">
+      <span className="text-xs font-bold text-white/46">{label}</span>
       <input
         id={id}
         value={value}
         inputMode={inputMode}
         onChange={(event) => onChange(event.target.value)}
-        className="min-w-0 rounded-full border border-brand-champagne bg-brand-warm-white px-4 py-2.5 text-sm font-semibold text-brand-charcoal outline-none transition focus:border-brand-gold focus:bg-white focus:ring-2 focus:ring-brand-gold/20"
+        className="min-h-10 min-w-0 bg-transparent text-sm font-semibold text-white outline-none placeholder:text-white/28"
       />
     </label>
   );
@@ -546,8 +543,8 @@ function InputField({
 
 function EmptyCatalogState({ onReset }: { onReset: () => void }) {
   return (
-    <div className="rounded-[2rem] border border-brand-champagne bg-white px-6 py-16 text-center text-brand-charcoal/62">
-      <p className="font-playfair text-3xl font-bold text-brand-charcoal">
+    <div className="border-y border-brand-charcoal/16 px-6 py-16 text-center text-brand-charcoal/62">
+      <p className="text-3xl font-extrabold tracking-[-0.035em] text-brand-charcoal">
         No hay artículos en esta categoría todavía.
       </p>
       <button

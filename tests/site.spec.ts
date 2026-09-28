@@ -123,3 +123,49 @@ test("quick quote preserves the WhatsApp message flow", async ({ page }) => {
     page.getByRole("heading", { level: 2, name: "Hablemos de tu evento." })
   ).toBeVisible();
 });
+
+test("catalog keeps category filtering and multi-item quoting intact", async ({
+  page,
+}) => {
+  await page.goto("/catalogo?categoria=sillas");
+  await page.waitForFunction(() =>
+    [...document.querySelectorAll("button")].some((button) =>
+      Object.keys(button).some((key) => key.startsWith("__reactProps"))
+    )
+  );
+
+  await expect(
+    page.getByRole("heading", {
+      level: 1,
+      name: "Elige las piezas. Nosotros coordinamos el resto.",
+    })
+  ).toBeVisible();
+  await expect(page.getByRole("button", { name: /Sillas/ })).toHaveAttribute(
+    "aria-pressed",
+    "true"
+  );
+  await expect(
+    page.getByRole("heading", { level: 3, name: "Silla Infantil" })
+  ).toBeVisible();
+
+  await page
+    .getByRole("button", { name: "Agregar Silla Infantil a la cotización" })
+    .click();
+  const quoteLink = page
+    .locator("#quote-tray")
+    .getByRole("link", { name: "Cotizar por WhatsApp" });
+  await expect
+    .poll(async () =>
+      decodeURIComponent((await quoteLink.getAttribute("href")) ?? "")
+    )
+    .toContain("- Silla Infantil");
+
+  await page.getByRole("button", { name: /Mesas/ }).click();
+  await expect(page.getByRole("button", { name: /Mesas/ })).toHaveAttribute(
+    "aria-pressed",
+    "true"
+  );
+  await expect(
+    page.getByRole("heading", { level: 3, name: "Mesa Redonda" })
+  ).toBeVisible();
+});
