@@ -45,13 +45,28 @@ test("homepage follows the new editorial narrative", async ({ page }) => {
       level: 2,
       name: "Cuatro datos. Una cotización más clara.",
     })
-  ).toBeVisible();
+  ).toHaveCount(0);
   await expect(
     page.getByRole("heading", {
       level: 2,
       name: "Piezas reales, montajes reales.",
     })
   ).toBeVisible();
+});
+
+test("removed homepage copy stays out of the rendered experience", async ({
+  page,
+}) => {
+  await page.goto("/");
+
+  await expect(
+    page.getByText(
+      "Mobiliario limpio, inventario propio y montaje puntual para bodas, XV años, jardines y empresas."
+    )
+  ).toHaveCount(0);
+  await expect(page.getByText("Antes de escribir", { exact: true })).toHaveCount(
+    0
+  );
 });
 
 test("scroll motion never hides content before it enters the viewport", async ({

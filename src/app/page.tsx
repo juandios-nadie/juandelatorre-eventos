@@ -3,7 +3,6 @@ import HeroSection from "@/components/HeroSection";
 import TrustBar from "@/components/TrustBar";
 import ServicesSection from "@/components/ServicesSection";
 import EventTypesSection from "@/components/EventTypesSection";
-import ProcessSection from "@/components/ProcessSection";
 import FeaturedGallery from "@/components/FeaturedGallery";
 import FacebookEventsSection from "@/components/FacebookEventsSection";
 import QuoteGuideSection from "@/components/QuoteGuideSection";
@@ -37,7 +36,6 @@ export default async function Home() {
         <TrustBar />
         <ServicesSection categories={categories} />
         <EventTypesSection />
-        <ProcessSection />
         <FeaturedGallery items={featuredItems} />
         <FacebookEventsSection facebookUrl={settings?.facebookUrl} />
         <QuoteGuideSection />

@@ -13,10 +13,6 @@ export default function HeroSection({ settings }: HeroSectionProps) {
     ? urlFor(settings.heroImage).width(1920).quality(85).url()
     : null;
 
-  const tagline =
-    settings?.tagline ??
-    "Mobiliario limpio, inventario propio y montaje puntual para bodas, XV años, jardines y empresas.";
-
   return (
     <section className="relative isolate flex min-h-[100dvh] overflow-hidden bg-brand-charcoal text-white">
       <Image
@@ -41,10 +37,6 @@ export default function HeroSection({ settings }: HeroSectionProps) {
             <span className="lg:block">Renta de mobiliario para </span>
             <span className="lg:block">eventos en Guadalajara.</span>
           </h1>
-          <p className="mt-6 max-w-xl text-base font-medium leading-7 text-white/72 sm:text-lg sm:leading-8">
-            {tagline}
-          </p>
-
           <div className="mt-8 flex flex-col gap-3 sm:flex-row">
             <a
               href="#cotizar"
