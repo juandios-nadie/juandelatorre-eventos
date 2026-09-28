@@ -139,6 +139,26 @@ test("quick quote preserves the WhatsApp message flow", async ({ page }) => {
   ).toBeVisible();
 });
 
+test("quick quote offers Fiesta as an event type", async ({ page }) => {
+  await page.goto("/");
+
+  const fiestaButton = page.getByRole("button", {
+    name: "Fiesta",
+    exact: true,
+  });
+  await expect(fiestaButton).toBeVisible();
+  await fiestaButton.click();
+
+  const quoteLink = page.getByRole("link", {
+    name: "Enviar datos por WhatsApp",
+  });
+  await expect
+    .poll(async () =>
+      decodeURIComponent((await quoteLink.getAttribute("href")) ?? "")
+    )
+    .toContain("Tipo de evento: Fiesta");
+});
+
 test("catalog keeps category filtering and multi-item quoting intact", async ({
   page,
 }) => {

@@ -51,7 +51,14 @@ const FIELD_CONFIG = [
 type FieldKey = (typeof FIELD_CONFIG)[number]["key"];
 type FormState = Record<FieldKey, string> & { eventType: string };
 
-const EVENT_TYPES = ["Boda", "XV años", "Cumpleaños", "Empresa", "Jardín"];
+const EVENT_TYPES = [
+  "Boda",
+  "XV años",
+  "Cumpleaños",
+  "Fiesta",
+  "Empresa",
+  "Jardín",
+];
 const ITEM_CHIPS = ["Sillas", "Mesas", "Toldos", "Cristalería", "Escenario"];
 
 const EMPTY_FORM: FormState = {
