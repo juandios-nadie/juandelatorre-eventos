@@ -88,10 +88,7 @@ export default function QuickQuoteForm({
   );
 
   const quoteUrl = useMemo(() => buildQuoteUrl(quoteInput), [quoteInput]);
-  const quotePreview = useMemo(
-    () => buildQuoteMessage(quoteInput),
-    [quoteInput]
-  );
+  const quotePreview = useMemo(() => buildQuoteMessage(quoteInput), [quoteInput]);
 
   function updateField(key: FieldKey, value: string) {
     setForm((current) => ({ ...current, [key]: value }));
@@ -105,14 +102,15 @@ export default function QuickQuoteForm({
     );
   }
 
-  const secondary =
-    secondaryAction ? <SecondaryActionButton action={secondaryAction} /> : null;
+  const secondary = secondaryAction ? (
+    <SecondaryActionButton action={secondaryAction} />
+  ) : null;
   const submit = (
     <a
       href={quoteUrl}
       target="_blank"
       rel="noopener noreferrer"
-      className="inline-flex min-h-14 flex-1 items-center justify-center gap-3 rounded-full bg-[#075E54] px-6 py-3.5 text-sm font-bold text-white transition hover:bg-[#064D45] focus:outline-none focus:ring-2 focus:ring-[#25D366] focus:ring-offset-2 focus:ring-offset-brand-charcoal active:translate-y-px sm:flex-none"
+      className="inline-flex min-h-14 flex-1 items-center justify-center gap-2 rounded-full bg-brand-gold px-6 py-3.5 text-sm font-extrabold text-brand-charcoal transition hover:bg-white focus:outline-none focus:ring-2 focus:ring-brand-gold focus:ring-offset-2 focus:ring-offset-brand-charcoal active:scale-[0.98] sm:flex-none"
     >
       <WhatsAppIcon size={18} />
       {submitLabel}
@@ -121,11 +119,11 @@ export default function QuickQuoteForm({
 
   return (
     <div>
-      <fieldset className="mb-5">
-        <legend className="text-xs font-bold text-brand-champagne/76">
+      <fieldset className="border-b border-white/14 pb-6">
+        <legend className="text-xs font-extrabold uppercase tracking-[0.12em] text-white/52">
           Tipo de evento
         </legend>
-        <div className="mt-2 flex flex-wrap gap-2">
+        <div className="mt-3 flex flex-wrap gap-2">
           {EVENT_TYPES.map((type) => {
             const selected = form.eventType === type;
 
@@ -140,10 +138,10 @@ export default function QuickQuoteForm({
                     eventType: selected ? "" : type,
                   }))
                 }
-                className={`rounded-full border px-3 py-2 text-xs font-bold transition focus:outline-none focus:ring-2 focus:ring-brand-gold focus:ring-offset-2 focus:ring-offset-brand-charcoal ${
+                className={`min-h-11 rounded-full border px-4 py-2 text-xs font-extrabold transition focus:outline-none focus:ring-2 focus:ring-brand-gold focus:ring-offset-2 focus:ring-offset-brand-charcoal ${
                   selected
                     ? "border-brand-gold bg-brand-gold text-brand-charcoal"
-                    : "border-white/12 bg-white/[0.06] text-brand-champagne hover:bg-white/[0.1]"
+                    : "border-white/16 text-white/66 hover:border-white/40 hover:text-white"
                 }`}
               >
                 {type}
@@ -153,11 +151,11 @@ export default function QuickQuoteForm({
         </div>
       </fieldset>
 
-      <fieldset className="mb-5">
-        <legend className="text-xs font-bold text-brand-champagne/76">
+      <fieldset className="border-b border-white/14 py-6">
+        <legend className="text-xs font-extrabold uppercase tracking-[0.12em] text-white/52">
           Piezas de interés
         </legend>
-        <div className="mt-2 flex flex-wrap gap-2">
+        <div className="mt-3 flex flex-wrap gap-2">
           {ITEM_CHIPS.map((item) => {
             const selected = selectedItems.includes(item);
 
@@ -167,10 +165,10 @@ export default function QuickQuoteForm({
                 type="button"
                 aria-pressed={selected}
                 onClick={() => toggleItem(item)}
-                className={`rounded-full border px-3 py-2 text-xs font-bold transition focus:outline-none focus:ring-2 focus:ring-brand-gold focus:ring-offset-2 focus:ring-offset-brand-charcoal ${
+                className={`min-h-11 rounded-full border px-4 py-2 text-xs font-extrabold transition focus:outline-none focus:ring-2 focus:ring-brand-gold focus:ring-offset-2 focus:ring-offset-brand-charcoal ${
                   selected
                     ? "border-brand-gold bg-brand-gold text-brand-charcoal"
-                    : "border-white/12 bg-white/[0.06] text-brand-champagne hover:bg-white/[0.1]"
+                    : "border-white/16 text-white/66 hover:border-white/40 hover:text-white"
                 }`}
               >
                 {item}
@@ -180,31 +178,29 @@ export default function QuickQuoteForm({
         </div>
       </fieldset>
 
-      <div className="grid gap-3 sm:grid-cols-2">
+      <div className="grid gap-x-8 sm:grid-cols-2">
         {FIELD_CONFIG.map((field) => (
           <label
             key={field.key}
-            className="grid gap-1.5 rounded-2xl border border-white/10 bg-white/[0.06] px-4 py-3 text-brand-champagne transition focus-within:border-brand-gold focus-within:bg-white/[0.09]"
+            className="grid min-h-24 content-center border-b border-white/14 py-4 text-white transition focus-within:border-brand-gold"
           >
-            <span className="text-xs font-bold text-brand-champagne/68">
-              {field.label}
-            </span>
+            <span className="text-xs font-bold text-white/48">{field.label}</span>
             <input
               value={form[field.key]}
               onChange={(event) => updateField(field.key, event.target.value)}
               inputMode={field.inputMode}
               placeholder={field.placeholder}
-              className="min-w-0 bg-transparent text-sm font-semibold text-white outline-none placeholder:text-brand-champagne/62"
+              className="mt-2 min-w-0 bg-transparent text-sm font-semibold text-white outline-none placeholder:text-white/28"
             />
           </label>
         ))}
       </div>
 
-      <div className="mt-5 rounded-2xl border border-white/10 bg-white/[0.045] p-4">
-        <p className="text-xs font-bold text-brand-champagne/76">
+      <div className="mt-7 grid gap-2 border-l border-brand-gold/55 pl-5">
+        <p className="text-xs font-extrabold uppercase tracking-[0.12em] text-brand-gold">
           Mensaje preparado
         </p>
-        <p className="mt-2 max-h-32 overflow-y-auto whitespace-pre-line text-xs leading-6 text-white/64">
+        <p className="max-h-32 overflow-y-auto whitespace-pre-line text-xs leading-6 text-white/54">
           {quotePreview}
         </p>
       </div>
@@ -221,8 +217,8 @@ export default function QuickQuoteForm({
 function SecondaryActionButton({ action }: { action: SecondaryAction }) {
   const className =
     action.variant === "gold"
-      ? "inline-flex min-h-14 flex-1 items-center justify-center rounded-full bg-brand-gold px-6 py-3.5 text-sm font-bold text-brand-charcoal transition hover:bg-brand-champagne focus:outline-none focus:ring-2 focus:ring-brand-gold focus:ring-offset-2 focus:ring-offset-brand-charcoal active:translate-y-px sm:flex-none"
-      : "inline-flex min-h-14 flex-1 items-center justify-center gap-3 rounded-full border border-white/16 bg-white/10 px-6 py-3.5 text-sm font-bold text-white transition hover:bg-white/16 focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-brand-charcoal active:translate-y-px sm:flex-none";
+      ? "inline-flex min-h-14 flex-1 items-center justify-center rounded-full bg-brand-gold px-6 py-3.5 text-sm font-extrabold text-brand-charcoal transition hover:bg-white focus:outline-none focus:ring-2 focus:ring-brand-gold focus:ring-offset-2 focus:ring-offset-brand-charcoal active:scale-[0.98] sm:flex-none"
+      : "inline-flex min-h-14 flex-1 items-center justify-center gap-2 rounded-full border border-white/18 px-6 py-3.5 text-sm font-extrabold text-white transition hover:bg-white hover:text-brand-charcoal focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-brand-charcoal active:scale-[0.98] sm:flex-none";
 
   if (action.external) {
     return (

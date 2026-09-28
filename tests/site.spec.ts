@@ -58,7 +58,11 @@ test("scroll motion never hides content before it enters the viewport", async ({
   page,
 }) => {
   await page.goto("/");
-  await page.waitForTimeout(500);
+  await page.waitForFunction(() =>
+    [...document.querySelectorAll("button")].some((button) =>
+      Object.keys(button).some((key) => key.startsWith("__reactProps"))
+    )
+  );
 
   const laterHeading = page.getByRole("heading", {
     level: 2,
@@ -77,4 +81,45 @@ test("scroll motion never hides content before it enters the viewport", async ({
   });
 
   expect(effectiveOpacity).toBe(1);
+});
+
+test("quick quote preserves the WhatsApp message flow", async ({ page }) => {
+  await page.goto("/");
+  await page.waitForFunction(() =>
+    [...document.querySelectorAll("button")].some((button) =>
+      Object.keys(button).some((key) => key.startsWith("__reactProps"))
+    )
+  );
+
+  await expect(
+    page.getByRole("heading", {
+      level: 2,
+      name: "De la idea al mensaje, sin empezar de cero.",
+    })
+  ).toBeVisible();
+  await page.getByRole("button", { name: "Boda", exact: true }).click();
+  await page.getByRole("button", { name: "Sillas", exact: true }).click();
+  await page.getByLabel("Fecha del evento").fill("12 de octubre");
+  await page.getByLabel("Zona o colonia").fill("Zapopan Centro");
+  await page.getByLabel("Cantidad aproximada de invitados").fill("120");
+
+  const quoteLink = page.getByRole("link", {
+    name: "Enviar datos por WhatsApp",
+  });
+  await expect
+    .poll(async () =>
+      decodeURIComponent((await quoteLink.getAttribute("href")) ?? "")
+    )
+    .toContain("Tipo de evento: Boda");
+  const quoteHref = await quoteLink.getAttribute("href");
+  const decodedHref = decodeURIComponent(quoteHref ?? "");
+
+  expect(decodedHref).toContain("Tipo de evento: Boda");
+  expect(decodedHref).toContain("- Sillas");
+  expect(decodedHref).toContain("Fecha del evento: 12 de octubre");
+  expect(decodedHref).toContain("Invitados aproximados: 120");
+  expect(decodedHref).toContain("Zona del evento: Zapopan Centro");
+  await expect(
+    page.getByRole("heading", { level: 2, name: "Hablemos de tu evento." })
+  ).toBeVisible();
 });
