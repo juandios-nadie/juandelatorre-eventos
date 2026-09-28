@@ -1,42 +1,38 @@
 const TRUST_ITEMS = [
   {
-    value: "3.8k+",
-    label: "seguidores en Facebook",
-    detail: "La conversación comercial ya vive ahí.",
+    label: "Inventario propio",
+    detail: "Piezas reales para elegir y combinar.",
   },
   {
-    value: "Directo",
-    label: "por WhatsApp",
-    detail: "Sin formularios largos ni intermediarios.",
+    label: "Montaje puntual",
+    detail: "Entrega, instalación y recolección coordinadas.",
   },
   {
-    value: "GDL",
-    label: "y zona metropolitana",
-    detail: "Servicio local para casas, jardines y salones.",
+    label: "Guadalajara y Zapopan",
+    detail: "Servicio local para jardines, casas y salones.",
   },
   {
-    value: "Propio",
-    label: "inventario de renta",
-    detail: "Sillas, mesas, toldos, cristalería y escenarios.",
+    label: "Cotización directa",
+    detail: "Fecha, zona e invitados por WhatsApp.",
   },
 ];
 
 export default function TrustBar() {
   return (
-    <section className="bg-brand-charcoal px-4 pb-10 text-white sm:px-6 lg:px-8">
-      <div className="mx-auto grid max-w-7xl overflow-hidden rounded-[1.75rem] border border-white/10 bg-white/[0.06] sm:grid-cols-2 lg:grid-cols-4">
-        {TRUST_ITEMS.map((item) => (
+    <section className="bg-brand-charcoal text-white" aria-label="Garantías del servicio">
+      <div className="section-shell grid border-y border-white/12 sm:grid-cols-2 lg:grid-cols-4">
+        {TRUST_ITEMS.map((item, index) => (
           <div
             key={item.label}
-            className="border-b border-white/10 p-5 last:border-b-0 sm:odd:border-r lg:border-b-0 lg:border-r lg:last:border-r-0"
+            className="relative border-b border-white/10 py-6 sm:px-6 sm:odd:border-r lg:border-b-0 lg:border-r lg:px-7 lg:first:pl-0 lg:last:border-r-0 lg:last:pr-0"
           >
-            <p className="font-playfair text-3xl font-bold text-brand-gold">
-              {item.value}
-            </p>
-            <p className="mt-1 text-sm font-semibold text-white">
+            <span className="mb-8 block text-xs font-bold tabular-nums text-brand-gold/70">
+              {String(index + 1).padStart(2, "0")}
+            </span>
+            <p className="text-base font-extrabold tracking-[-0.025em] text-white">
               {item.label}
             </p>
-            <p className="mt-2 text-sm leading-6 text-white/55">
+            <p className="mt-2 max-w-[16rem] text-sm leading-6 text-white/48">
               {item.detail}
             </p>
           </div>

@@ -24,43 +24,41 @@ export default function Navbar({
   const [menuOpen, setMenuOpen] = useState(false);
   const quoteIsExternal = quoteHref.startsWith("http");
   const quoteButtonClass =
-    "items-center gap-2 rounded-full bg-[#075E54] px-4 py-2 text-sm font-bold text-white transition-colors hover:bg-[#064D45] focus:outline-none focus:ring-2 focus:ring-[#25D366] focus:ring-offset-2 focus:ring-offset-brand-charcoal";
+    "items-center gap-2 rounded-full bg-brand-gold px-5 py-2.5 text-sm font-extrabold text-brand-charcoal transition duration-300 hover:bg-brand-champagne focus:outline-none focus:ring-2 focus:ring-brand-gold focus:ring-offset-2 focus:ring-offset-brand-charcoal active:scale-[0.98]";
   const mobileQuoteClass =
-    "flex w-fit items-center gap-2 rounded-full bg-[#075E54] px-4 py-2.5 text-sm font-bold text-white transition-colors hover:bg-[#064D45] focus:outline-none focus:ring-2 focus:ring-[#25D366] focus:ring-offset-2 focus:ring-offset-brand-charcoal";
+    "flex min-h-12 w-full items-center justify-center gap-2 rounded-full bg-brand-gold px-5 py-3 text-sm font-extrabold text-brand-charcoal transition active:scale-[0.98]";
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 border-b border-white/10 bg-brand-charcoal/92 backdrop-blur-md">
-      <nav className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6">
-        {/* Wordmark */}
+    <header className="fixed inset-x-0 top-0 z-50 border-b border-white/10 bg-brand-charcoal/86 text-white backdrop-blur-xl">
+      <nav className="section-shell flex h-[4.5rem] items-center justify-between">
         <Link
           href="/"
           aria-label="Ir al inicio de Juan de la Torre Eventos"
-          className="group flex items-center gap-3 leading-none"
+          className="group flex min-h-11 items-center gap-3 leading-none focus:outline-none"
         >
           <Image
             src="/logo.jpg"
             alt=""
             width={36}
             height={36}
-            className="h-9 w-9 rounded-xl border border-white/12 object-cover"
+            className="h-9 w-9 rounded-lg border border-white/15 object-cover"
           />
-          <span className="hidden flex-col sm:flex">
-            <span className="font-playfair text-sm font-bold text-brand-gold transition-colors group-hover:text-brand-champagne">
+          <span className="flex flex-col">
+            <span className="text-[0.72rem] font-extrabold tracking-[-0.02em] text-white transition-colors group-hover:text-brand-gold sm:text-sm">
               Juan de la Torre
             </span>
-            <span className="mt-0.5 text-[10px] font-semibold uppercase tracking-[0.3em] text-brand-champagne/72 transition-colors group-hover:text-brand-champagne">
+            <span className="mt-0.5 text-[8px] font-bold uppercase tracking-[0.28em] text-white/50 transition-colors group-hover:text-white/72 sm:text-[9px]">
               Eventos
             </span>
           </span>
         </Link>
 
-        {/* Desktop links */}
-        <ul className="hidden md:flex items-center gap-8">
+        <ul className="hidden items-center gap-8 md:flex">
           {NAV_LINKS.map(({ href, label }) => (
             <li key={href}>
               <Link
                 href={href}
-                className="text-sm font-medium text-brand-champagne/82 transition-colors hover:text-brand-gold"
+                className="py-3 text-sm font-semibold text-white/68 transition-colors hover:text-white focus:outline-none focus-visible:text-brand-gold"
               >
                 {label}
               </Link>
@@ -68,7 +66,6 @@ export default function Navbar({
           ))}
         </ul>
 
-        {/* Desktop CTA */}
         {quoteIsExternal ? (
           <a
             href={quoteHref}
@@ -86,37 +83,49 @@ export default function Navbar({
           </Link>
         )}
 
-        {/* Mobile hamburger */}
         <button
           onClick={() => setMenuOpen((o) => !o)}
-          className="flex min-h-11 min-w-11 items-center justify-center rounded-full text-brand-champagne transition hover:bg-white/8 focus:outline-none focus:ring-2 focus:ring-brand-gold focus:ring-offset-2 focus:ring-offset-brand-charcoal md:hidden"
+          className="relative flex min-h-11 min-w-11 items-center justify-center rounded-full border border-white/12 text-white transition hover:bg-white/8 focus:outline-none focus:ring-2 focus:ring-brand-gold focus:ring-offset-2 focus:ring-offset-brand-charcoal md:hidden"
           aria-label={menuOpen ? "Cerrar menú" : "Abrir menú"}
           aria-expanded={menuOpen}
           aria-controls="mobile-navigation"
         >
-          {menuOpen ? <XIcon /> : <MenuIcon />}
+          <span className="sr-only">
+            {menuOpen ? "Cerrar navegación" : "Abrir navegación"}
+          </span>
+          <span aria-hidden="true" className="grid w-5 gap-1.5">
+            <span
+              className={`h-px w-5 bg-current transition-transform ${
+                menuOpen ? "translate-y-[3.5px] rotate-45" : ""
+              }`}
+            />
+            <span
+              className={`h-px w-5 bg-current transition-transform ${
+                menuOpen ? "-translate-y-[3.5px] -rotate-45" : ""
+              }`}
+            />
+          </span>
         </button>
       </nav>
 
-      {/* Mobile menu */}
       {menuOpen && (
         <div
           id="mobile-navigation"
-          className="border-t border-white/10 bg-brand-charcoal px-6 pb-6 md:hidden"
+          className="border-t border-white/10 bg-brand-charcoal px-4 pb-6 md:hidden"
         >
-          <ul className="flex flex-col gap-4 pt-4">
+          <ul className="mx-auto flex max-w-7xl flex-col pt-3">
             {NAV_LINKS.map(({ href, label }) => (
               <li key={href}>
                 <Link
                   href={href}
                   onClick={() => setMenuOpen(false)}
-                  className="block py-3 text-sm font-medium text-brand-champagne/82 transition-colors hover:text-brand-gold focus:outline-none focus:ring-2 focus:ring-brand-gold focus:ring-offset-2 focus:ring-offset-brand-charcoal"
+                  className="flex min-h-12 items-center border-b border-white/10 text-base font-semibold text-white/72 transition-colors hover:text-white focus:outline-none focus-visible:text-brand-gold"
                 >
                   {label}
                 </Link>
               </li>
             ))}
-            <li>
+            <li className="pt-5">
               {quoteIsExternal ? (
                 <a
                   href={quoteHref}
@@ -142,40 +151,5 @@ export default function Navbar({
         </div>
       )}
     </header>
-  );
-}
-
-function MenuIcon() {
-  return (
-    <svg
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-    >
-      <line x1="3" y1="6" x2="21" y2="6" />
-      <line x1="3" y1="12" x2="21" y2="12" />
-      <line x1="3" y1="18" x2="21" y2="18" />
-    </svg>
-  );
-}
-
-function XIcon() {
-  return (
-    <svg
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-    >
-      <line x1="6" y1="6" x2="18" y2="18" />
-      <line x1="18" y1="6" x2="6" y2="18" />
-    </svg>
   );
 }
