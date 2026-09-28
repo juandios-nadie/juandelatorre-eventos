@@ -36,9 +36,8 @@ export default function SectionReveal({
     const context = gsap.context(() => {
       gsap.fromTo(
         root.current,
-        { autoAlpha: 0, y },
+        { y },
         {
-          autoAlpha: 1,
           y: 0,
           delay,
           duration: 0.76,

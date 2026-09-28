@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import type { Category } from "@/lib/sanity";
 import { STATIC_CATEGORIES, getCategoryImage } from "@/lib/staticData";
+import SectionReveal from "./SectionReveal";
 
 interface ServicesSectionProps {
   categories: Category[];
@@ -19,68 +20,85 @@ const CATEGORY_COPY: Record<string, string> = {
 
 export default function ServicesSection({ categories }: ServicesSectionProps) {
   const items = categories.length > 0 ? categories : STATIC_CATEGORIES;
+  const [featured, ...rest] = items;
 
   return (
-    <section className="bg-brand-warm-white px-4 py-20 sm:px-6 lg:px-8">
-      <div className="mx-auto max-w-7xl">
-        <div className="grid gap-8 lg:grid-cols-[0.72fr_1fr] lg:items-end">
+    <section className="bg-brand-warm-white py-24 sm:py-28" id="catalogo">
+      <div className="section-shell">
+        <SectionReveal className="grid gap-8 border-b border-brand-charcoal/18 pb-10 lg:grid-cols-[0.9fr_1.1fr] lg:items-end">
           <div>
-            <p className="text-sm font-bold text-brand-ruby">
-              Catálogo de renta
-            </p>
-            <h2 className="mt-3 font-playfair text-4xl font-bold leading-tight text-brand-charcoal sm:text-5xl">
-              Elige rápido lo que necesitas para tu evento.
+            <p className="editorial-kicker">Catálogo de renta</p>
+            <h2 className="display-type mt-4 max-w-xl text-4xl leading-[0.98] text-brand-charcoal sm:text-6xl">
+              Un inventario amplio. Una decisión simple.
             </h2>
           </div>
-          <p className="max-w-2xl text-base leading-8 text-brand-charcoal/68 lg:justify-self-end">
-            Explora por tipo de pieza y entra al catálogo con el filtro listo
-            para comparar opciones antes de escribir por WhatsApp.
+          <p className="max-w-xl text-base leading-8 text-brand-charcoal/62 lg:justify-self-end">
+            Empieza por una familia de piezas. El catálogo conservará el filtro
+            para que compares opciones y nos escribas con una idea más clara.
           </p>
-        </div>
+        </SectionReveal>
 
-        <div className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
-          {items.map((cat, index) => (
+        <div className="mt-12 grid gap-12 lg:grid-cols-[1.1fr_0.9fr] lg:gap-16">
+          <SectionReveal>
             <Link
-              key={cat._id}
-              href={`/catalogo?categoria=${cat.slug}`}
-              className={`group relative min-h-72 overflow-hidden rounded-[1.75rem] border border-brand-champagne bg-brand-charcoal shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-xl focus:outline-none focus:ring-2 focus:ring-brand-gold focus:ring-offset-2 focus:ring-offset-brand-warm-white motion-reduce:transform-none motion-reduce:transition-none ${
-                index === 0 || index === 1 ? "lg:col-span-2" : ""
-              }`}
+              href={`/catalogo?categoria=${featured.slug}`}
+              aria-label={`Explorar ${featured.name}`}
+              className="group block focus:outline-none"
             >
-              <Image
-                src={getCategoryImage(cat.slug)}
-                alt={cat.name}
-                fill
-                sizes={
-                  index === 0 || index === 1
-                    ? "(max-width: 768px) 100vw, 50vw"
-                    : "(max-width: 768px) 100vw, 25vw"
-                }
-                className="object-cover opacity-[0.9] transition duration-700 group-hover:scale-[1.04] motion-reduce:transform-none motion-reduce:transition-none"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-brand-charcoal via-brand-charcoal/22 to-transparent" />
-              <div className="absolute inset-x-0 bottom-0 p-5 sm:p-6">
-                <h3 className="font-playfair text-2xl font-bold text-white">
-                  {cat.name}
-                </h3>
-                <p className="mt-2 max-w-sm text-sm leading-6 text-white/68">
-                  {CATEGORY_COPY[cat.slug] ?? "Piezas para completar tu evento."}
-                </p>
-                <span className="mt-4 inline-flex rounded-full bg-white px-4 py-2 text-xs font-bold text-brand-charcoal transition group-hover:bg-brand-gold group-hover:text-brand-charcoal">
-                  Ver {cat.name.toLowerCase()}
+              <div className="media-surface relative aspect-[4/3] bg-brand-charcoal">
+                <Image
+                  src={getCategoryImage(featured.slug)}
+                  alt={`Selección de ${featured.name.toLowerCase()} disponibles para renta`}
+                  fill
+                  sizes="(max-width: 1024px) 100vw, 55vw"
+                  className="object-cover transition duration-700 group-hover:scale-[1.025] motion-reduce:transform-none motion-reduce:transition-none"
+                />
+              </div>
+              <div className="mt-5 flex items-start justify-between gap-6 border-b border-brand-charcoal/18 pb-5">
+                <div>
+                  <p className="text-2xl font-extrabold tracking-[-0.035em] text-brand-charcoal sm:text-3xl">
+                    {featured.name}
+                  </p>
+                  <p className="mt-2 max-w-lg text-sm leading-6 text-brand-charcoal/58">
+                    {CATEGORY_COPY[featured.slug]}
+                  </p>
+                </div>
+                <span className="mt-1 text-2xl text-brand-gold transition-transform duration-300 group-hover:translate-x-1" aria-hidden="true">
+                  ↗
                 </span>
               </div>
             </Link>
-          ))}
-        </div>
+          </SectionReveal>
 
-        <div className="mt-10">
-          <Link
-            href="/catalogo"
-            className="inline-flex items-center justify-center rounded-full bg-brand-charcoal px-7 py-3.5 text-sm font-bold text-white transition hover:bg-brand-ruby focus:outline-none focus:ring-2 focus:ring-brand-ruby focus:ring-offset-2 focus:ring-offset-brand-warm-white active:translate-y-px"
-          >
-            Ver catálogo completo
-          </Link>
+          <SectionReveal className="border-t border-brand-charcoal/18" delay={0.08}>
+            {rest.map((cat, index) => (
+              <Link
+                key={cat._id}
+                href={`/catalogo?categoria=${cat.slug}`}
+                aria-label={`Explorar ${cat.name}`}
+                className="group grid min-h-24 grid-cols-[2.5rem_1fr_auto] items-center gap-3 border-b border-brand-charcoal/18 py-4 focus:outline-none focus-visible:bg-white/55 sm:grid-cols-[3rem_0.8fr_1.2fr_auto] sm:gap-5"
+              >
+                <span className="text-xs font-bold tabular-nums text-brand-gold">
+                  {String(index + 2).padStart(2, "0")}
+                </span>
+                <span className="text-lg font-extrabold tracking-[-0.025em] text-brand-charcoal sm:text-xl">
+                  {cat.name}
+                </span>
+                <span className="hidden text-sm leading-6 text-brand-charcoal/52 sm:block">
+                  {CATEGORY_COPY[cat.slug] ?? "Piezas para completar tu evento."}
+                </span>
+                <span className="text-lg text-brand-charcoal transition duration-300 group-hover:translate-x-1 group-hover:text-brand-gold" aria-hidden="true">
+                  →
+                </span>
+              </Link>
+            ))}
+            <Link
+              href="/catalogo"
+              className="mt-8 inline-flex min-h-12 items-center justify-center rounded-full bg-brand-charcoal px-6 py-3 text-sm font-extrabold text-white transition hover:bg-brand-gold hover:text-brand-charcoal focus:outline-none focus:ring-2 focus:ring-brand-gold focus:ring-offset-2 focus:ring-offset-brand-warm-white active:scale-[0.98]"
+            >
+              Ver catálogo completo
+            </Link>
+          </SectionReveal>
         </div>
       </div>
     </section>

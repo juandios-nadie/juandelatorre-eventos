@@ -1,55 +1,57 @@
+import SectionReveal from "./SectionReveal";
+
 const PROCESS = [
   {
-    title: "Manda fecha, zona y cantidad",
-    body: "Con esos tres datos se puede revisar disponibilidad y evitar idas y vueltas.",
+    title: "Fecha",
+    body: "El día del evento permite revisar disponibilidad real.",
   },
   {
-    title: "Elige piezas o comparte una idea",
-    body: "Puedes llegar con artículos del catálogo o pedir orientación para armar el montaje.",
+    title: "Zona",
+    body: "La ubicación ayuda a coordinar entrega, montaje y recolección.",
   },
   {
-    title: "Se confirma disponibilidad",
-    body: "La cotización se cierra por WhatsApp con lo necesario para apartar el servicio.",
+    title: "Invitados",
+    body: "La cantidad define capacidades y combinaciones posibles.",
   },
   {
-    title: "Entrega, montaje y recolección",
-    body: "El objetivo es que el evento se vea listo sin que tengas que perseguir detalles.",
+    title: "Piezas",
+    body: "Elige del catálogo o comparte una referencia del montaje.",
   },
 ];
 
 export default function ProcessSection() {
   return (
-    <section className="bg-brand-charcoal px-4 py-20 text-white sm:px-6 lg:px-8">
-      <div className="mx-auto max-w-7xl">
-        <div className="grid gap-10 lg:grid-cols-[0.72fr_1fr] lg:items-start">
-          <div className="lg:sticky lg:top-24">
-            <p className="text-sm font-bold text-brand-gold">
-              Cómo se cotiza mejor
-            </p>
-            <h2 className="mt-3 font-playfair text-4xl font-bold leading-tight sm:text-5xl">
-              Menos mensajes sueltos, más claridad desde el inicio.
+    <section className="bg-brand-charcoal py-24 text-white sm:py-32">
+      <div className="section-shell">
+        <SectionReveal className="grid gap-8 lg:grid-cols-[1fr_0.72fr] lg:items-end">
+          <div>
+            <p className="editorial-kicker">Antes de escribir</p>
+            <h2 className="display-type mt-4 max-w-3xl text-4xl leading-[0.98] sm:text-6xl">
+              Cuatro datos. Una cotización más clara.
             </h2>
-            <p className="mt-5 text-base leading-8 text-white/65">
-              Cuando el primer mensaje trae artículos, fecha, invitados y zona,
-              la disponibilidad se revisa más rápido.
-            </p>
           </div>
+          <p className="max-w-lg text-base leading-8 text-white/58 lg:justify-self-end">
+            Con esta información desde el primer mensaje podemos revisar el
+            servicio con menos vueltas y darte una respuesta más útil.
+          </p>
+        </SectionReveal>
 
-          <div className="grid gap-4">
-            {PROCESS.map((item) => (
-              <article
-                key={item.title}
-                className="rounded-[1.5rem] border border-white/10 bg-white/[0.06] p-6"
-              >
-                <h3 className="font-playfair text-2xl font-bold text-brand-champagne">
-                  {item.title}
-                </h3>
-                <p className="mt-3 text-sm leading-7 text-white/62">
-                  {item.body}
-                </p>
-              </article>
-            ))}
-          </div>
+        <div className="mt-16 grid border-t border-white/16 sm:grid-cols-2 lg:grid-cols-4">
+          {PROCESS.map((item, index) => (
+            <SectionReveal
+              key={item.title}
+              delay={index * 0.05}
+              className="border-b border-white/16 py-8 sm:px-6 sm:odd:border-r lg:border-b-0 lg:border-r lg:px-7 lg:first:pl-0 lg:last:border-r-0 lg:last:pr-0"
+            >
+              <span className="block text-5xl font-extrabold tracking-[-0.06em] text-brand-gold sm:text-6xl">
+                {String(index + 1).padStart(2, "0")}
+              </span>
+              <h3 className="mt-12 text-xl font-extrabold tracking-[-0.03em]">
+                {item.title}
+              </h3>
+              <p className="mt-3 text-sm leading-7 text-white/52">{item.body}</p>
+            </SectionReveal>
+          ))}
         </div>
       </div>
     </section>

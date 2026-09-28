@@ -3,6 +3,7 @@ import Link from "next/link";
 import type { RentalItem } from "@/lib/sanity";
 import { urlFor } from "@/lib/sanity";
 import { STATIC_PHOTOS } from "@/lib/staticData";
+import SectionReveal from "./SectionReveal";
 
 interface FeaturedGalleryProps {
   items: RentalItem[];
@@ -13,56 +14,56 @@ export default function FeaturedGallery({ items }: FeaturedGalleryProps) {
     items.length > 0
       ? items.slice(0, 6).map((item) => ({
           src: item.photo
-            ? urlFor(item.photo).width(900).height(700).fit("crop").quality(82).url()
+            ? urlFor(item.photo).width(1000).height(900).fit("crop").quality(84).url()
             : "/images/hero.jpeg",
           label: item.name,
         }))
       : STATIC_PHOTOS;
 
   return (
-    <section className="bg-white px-4 py-20 sm:px-6 lg:px-8">
-      <div className="mx-auto max-w-7xl">
-        <div className="flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
-          <div className="max-w-2xl">
-            <p className="text-sm font-bold text-brand-ruby">
-              Montajes reales
-            </p>
-            <h2 className="mt-3 font-playfair text-4xl font-bold leading-tight text-brand-charcoal sm:text-5xl">
-              El inventario se entiende mejor cuando se ve en evento.
+    <section className="bg-brand-warm-white py-24 sm:py-32">
+      <div className="section-shell">
+        <SectionReveal className="flex flex-col gap-8 sm:flex-row sm:items-end sm:justify-between">
+          <div>
+            <p className="editorial-kicker">Inventario en contexto</p>
+            <h2 className="display-type mt-4 max-w-3xl text-4xl leading-[0.98] text-brand-charcoal sm:text-6xl">
+              Piezas reales, montajes reales.
             </h2>
           </div>
           <Link
             href="/catalogo"
-            className="inline-flex w-fit items-center justify-center rounded-full border border-brand-gold px-6 py-3 text-sm font-bold text-brand-charcoal transition hover:bg-brand-gold hover:text-white focus:outline-none focus:ring-2 focus:ring-brand-gold focus:ring-offset-2 focus:ring-offset-white active:translate-y-px"
+            className="inline-flex min-h-12 w-fit items-center justify-center rounded-full border border-brand-charcoal/25 px-6 py-3 text-sm font-extrabold text-brand-charcoal transition hover:border-brand-charcoal hover:bg-brand-charcoal hover:text-white focus:outline-none focus:ring-2 focus:ring-brand-gold focus:ring-offset-2 focus:ring-offset-brand-warm-white active:scale-[0.98]"
           >
-            Ver catálogo
+            Ver todo el inventario
           </Link>
-        </div>
+        </SectionReveal>
 
-        <div className="mt-12 grid auto-rows-[220px] gap-5 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="mt-14 grid auto-rows-[9rem] grid-cols-2 gap-3 sm:auto-rows-[12rem] sm:gap-5 lg:grid-cols-4 lg:auto-rows-[13rem]">
           {photos.map((photo, index) => (
-            <figure
+            <SectionReveal
               key={`${photo.src}-${photo.label}`}
-              className={`group relative overflow-hidden rounded-[1.75rem] bg-brand-charcoal ${
-                index === 0 ? "sm:col-span-2 sm:row-span-2" : ""
-              } ${index === 3 ? "lg:row-span-2" : ""}`}
+              delay={(index % 3) * 0.04}
+              className={`min-h-0 ${index === 0 ? "col-span-2 row-span-3" : "row-span-2"} ${index === 3 ? "col-span-2 lg:col-span-1 lg:row-span-3" : ""}`}
             >
-              <Image
-                src={photo.src}
-                alt={photo.label}
-                fill
-                sizes={
-                  index === 0
-                    ? "(max-width: 768px) 100vw, 50vw"
-                    : "(max-width: 768px) 100vw, 25vw"
-                }
-                className="object-cover transition duration-700 group-hover:scale-[1.04] motion-reduce:transform-none motion-reduce:transition-none"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-brand-charcoal/72 via-transparent to-transparent" />
-              <figcaption className="absolute bottom-0 left-0 right-0 p-5 font-playfair text-xl font-bold text-white">
-                {photo.label}
-              </figcaption>
-            </figure>
+              <figure className="flex h-full flex-col">
+                <div className="relative min-h-0 flex-1 overflow-hidden rounded-xl bg-brand-charcoal">
+                  <Image
+                    src={photo.src}
+                    alt={photo.label}
+                    fill
+                    sizes={
+                      index === 0
+                        ? "(max-width: 1024px) 100vw, 50vw"
+                        : "(max-width: 640px) 50vw, 25vw"
+                    }
+                    className="object-cover transition duration-700 hover:scale-[1.025] motion-reduce:transform-none motion-reduce:transition-none"
+                  />
+                </div>
+                <figcaption className="pt-3 text-xs font-bold uppercase tracking-[0.1em] text-brand-charcoal/54">
+                  {photo.label}
+                </figcaption>
+              </figure>
+            </SectionReveal>
           ))}
         </div>
       </div>
